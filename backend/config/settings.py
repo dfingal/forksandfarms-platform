@@ -152,6 +152,16 @@ REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
     "DEFAULT_PARSER_CLASSES": ["rest_framework.parsers.JSONParser"],
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
+    "DEFAULT_THROTTLE_RATES": {
+        "partner_application": "5/hour",
+    },
+    # Railway puts one reverse proxy in front of the app, which appends the
+    # real client IP to X-Forwarded-For. Without this, DRF's throttle (and
+    # our source_ip capture in core.utils.get_client_ip) would read
+    # REMOTE_ADDR — the proxy's own IP — and every visitor in production
+    # would share a single rate-limit bucket. Set to 0 (or unset) for a
+    # setup with no reverse proxy, e.g. plain local development.
+    "NUM_PROXIES": env.int("NUM_PROXIES", default=1),
 }
 
 
