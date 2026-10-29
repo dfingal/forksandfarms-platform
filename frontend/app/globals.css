@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+
+  /*
+   * Brand palette — PLACEHOLDER hex values (spec §8, open item in
+   * docs/phase1-spec.md §14). Swap these three lines for the final
+   * brand colors; every component references the tokens below, not
+   * raw hex, so a palette change is a one-line edit here.
+   */
+  --color-forest: #2f4f3e; /* TODO(brand): replace with final forest green */
+  --color-cream: #f6f1e7; /* TODO(brand): replace with final cream */
+  --color-terracotta: #c1622c; /* TODO(brand): replace with final terracotta */
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-forest: var(--color-forest);
+  --color-cream: var(--color-cream);
+  --color-terracotta: var(--color-terracotta);
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body), Arial, Helvetica, sans-serif;
+}
+
+/* Base typography — headings share one scale so pages don't each invent
+   their own sizes. Adjust here, not per-component. */
+h1 {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 600;
+}
+
+h3 {
+  font-size: 1.125rem;
+  line-height: 1.5rem;
+  font-weight: 600;
+}
+
+/* Visible focus state everywhere (spec §8 accessibility) — never remove
+   outline without supplying a replacement. */
+:focus-visible {
+  outline: 2px solid var(--color-terracotta);
+  outline-offset: 2px;
+}
