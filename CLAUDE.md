@@ -30,7 +30,7 @@ docs/        Spec and wireframes
 ```
 
 ## Backend conventions (Django)
-- Python 3.12+, virtualenv at `backend/.venv` (gitignored)
+- Python 3.14. Create the venv with `python3.14 -m venv .venv` inside `backend/`. The owner's default `python`/`python3` is an old 3.8 (Anaconda) — never use it.
 - Dependencies pinned in `backend/requirements.txt`
 - Config via environment variables (use `django-environ` or similar); one settings module that reads env vars, `DEBUG` from env
 - App structure: a `core` app (City, Venue, VenuePhoto) and a `partners` app (PartnerApplication) unless a plan proposes better
