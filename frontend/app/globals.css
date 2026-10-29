@@ -1,8 +1,11 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Fixed brand palette — the site does not follow the OS/browser dark
+     mode preference (there is deliberately no prefers-color-scheme
+     override here); it always renders cream background / forest text. */
+  --background: var(--color-cream);
+  --foreground: var(--color-forest);
 
   /*
    * Brand palette — PLACEHOLDER hex values (spec §8, open item in
@@ -23,13 +26,6 @@
   --color-terracotta: var(--color-terracotta);
   --font-sans: var(--font-body);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
