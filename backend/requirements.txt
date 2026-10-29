@@ -1,0 +1,15 @@
+# Pinned dependencies. Update deliberately; re-test after any bump.
+
+# Django 6.0 is the first release line to officially support Python 3.14.
+Django==6.0.9
+djangorestframework==3.16.1
+django-environ==0.12.0
+psycopg[binary]==3.2.10
+django-cors-headers==4.9.0
+django-filter==25.1
+
+# Venue/application photos. CLOUDINARY_URL is optional in dev — see settings.py,
+# which falls back to local disk storage (backend/media/) when it's unset.
+cloudinary==1.44.1
+django-cloudinary-storage==0.3.0
+Pillow==12.3.0
