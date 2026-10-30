@@ -22,14 +22,19 @@ declare global {
 
 const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 // A Map ID is required to render AdvancedMarker with custom pin styling.
-// Google's own "DEMO_MAP_ID" works for local dev without creating one;
-// require a real Map ID (env var) once this ships to production.
-const MAP_ID =
-  process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID ||
-  (process.env.NODE_ENV !== "production" ? "DEMO_MAP_ID" : undefined);
+// Use NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID whenever it's set, in any
+// environment (including production, once a real one is created); only
+// fall back to Google's own "DEMO_MAP_ID" when it's empty, so local dev
+// works without creating one first.
+const MAP_ID = process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID || "DEMO_MAP_ID";
+
+// Only the 4 fields the map actually needs — lets the venue detail page
+// reuse this component for a single pin without constructing a fake
+// CityDetail (which also carries a nested venues array it doesn't have).
+type MapCity = Pick<CityDetail, "name" | "map_center_lat" | "map_center_lng" | "map_zoom">;
 
 interface VenueMapProps {
-  city: CityDetail;
+  city: MapCity;
   venues: VenueCard[];
 }
 
@@ -115,6 +120,7 @@ export default function VenueMap({ city, venues }: VenueMapProps) {
           defaultZoom={city.map_zoom}
           gestureHandling="cooperative"
           disableDefaultUI={false}
+          clickableIcons={false}
           style={{ width: "100%", height: "100%" }}
         >
           <FitToVenues venues={venues} />

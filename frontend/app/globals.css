@@ -28,9 +28,21 @@
   --font-mono: var(--font-geist-mono);
 }
 
+html,
 body {
   background: var(--background);
   color: var(--foreground);
+}
+
+html {
+  /* Without this, some browsers (Safari in particular) paint their own
+     dark canvas behind the page in OS dark mode whenever content is
+     shorter than the viewport — showing as a black band below the
+     footer even though body itself is cream. */
+  color-scheme: light;
+}
+
+body {
   font-family: var(--font-body), Arial, Helvetica, sans-serif;
 }
 
