@@ -12,6 +12,14 @@ import {
 import type { CityDetail, VenueCard } from "@/lib/types";
 import { VENUE_STATUS_LABELS } from "@/lib/labels";
 
+declare global {
+  interface Window {
+    // Google calls this global when the Maps JS API key is invalid/
+    // restricted for the current domain — see the useEffect below.
+    gm_authFailure?: () => void;
+  }
+}
+
 const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 // A Map ID is required to render AdvancedMarker with custom pin styling.
 // Google's own "DEMO_MAP_ID" works for local dev without creating one;
@@ -56,7 +64,7 @@ function MapPlaceholder({ city, venues }: VenueMapProps) {
   // No API key, no load, or a runtime script error: a styled fallback
   // instead of a broken/blank map (never crash the page over this).
   return (
-    <div className="flex min-h-80 flex-col items-center justify-center gap-3 rounded-lg border border-forest/10 bg-forest/5 p-6 text-center">
+    <div className="flex h-80 flex-col items-center justify-center gap-3 rounded-lg border border-forest/10 bg-forest/5 p-6 text-center sm:h-96">
       <p className="text-sm text-forest/70">
         Map unavailable right now — here are our {city.name} locations:
       </p>
@@ -80,20 +88,34 @@ export default function VenueMap({ city, venues }: VenueMapProps) {
   const [selected, setSelected] = useState<VenueCard | null>(null);
   const [loadFailed, setLoadFailed] = useState(false);
 
+  // Google reports an invalid/restricted API key via this global callback,
+  // not via APIProvider's onError — register it before the Maps script
+  // loads so a bad key falls back to the placeholder instead of a blank map.
+  useEffect(() => {
+    window.gm_authFailure = () => setLoadFailed(true);
+    return () => {
+      delete window.gm_authFailure;
+    };
+  }, []);
+
   if (!API_KEY || loadFailed) {
     return <MapPlaceholder city={city} venues={venues} />;
   }
 
   return (
     <APIProvider apiKey={API_KEY} onError={() => setLoadFailed(true)}>
-      <div className="relative min-h-80 overflow-hidden rounded-lg border border-forest/10">
+      {/* Explicit height, not just min-height: Map below is styled
+          height:"100%", which only resolves against an ancestor with a
+          definite (not auto/min-only) height. Without this the map's
+          internal container computed to 0x0 and no tiles ever loaded. */}
+      <div className="relative h-80 overflow-hidden rounded-lg border border-forest/10 sm:h-96">
         <Map
           mapId={MAP_ID}
           defaultCenter={{ lat: Number(city.map_center_lat), lng: Number(city.map_center_lng) }}
           defaultZoom={city.map_zoom}
           gestureHandling="cooperative"
           disableDefaultUI={false}
-          style={{ width: "100%", height: "100%", minHeight: "20rem" }}
+          style={{ width: "100%", height: "100%" }}
         >
           <FitToVenues venues={venues} />
 

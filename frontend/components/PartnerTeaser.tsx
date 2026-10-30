@@ -19,8 +19,8 @@ const OPTIONS = [
 export default function PartnerTeaser() {
   return (
     <section className="bg-forest/5">
-      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-        <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+      <div className="mx-auto max-w-6xl px-4 py-7 sm:px-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <h2 className="text-forest">Put plants to work in your space.</h2>
             {/* TODO(copy) */}
@@ -37,7 +37,7 @@ export default function PartnerTeaser() {
           </Link>
         </div>
 
-        <div className="mt-6 grid gap-4 sm:grid-cols-3">
+        <div className="mt-4 grid gap-4 sm:grid-cols-3">
           {OPTIONS.map((option) => (
             <div key={option.title} className="rounded-lg border border-forest/10 bg-white p-4">
               <h3 className="text-forest">{option.title}</h3>

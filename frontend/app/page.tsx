@@ -18,8 +18,8 @@ export default async function Home() {
       <WhatWeDo />
 
       {city === null ? (
-        <section id="map" className="scroll-mt-24 mx-auto max-w-6xl px-4 py-10 sm:px-6">
-          <h2 className="mb-4 text-forest">Find plants near you</h2>
+        <section id="map" className="scroll-mt-24 mx-auto max-w-6xl px-4 py-7 sm:px-6">
+          <h2 className="mb-3 text-forest">Find plants near you</h2>
           <p className="rounded border border-terracotta/30 bg-terracotta/5 px-4 py-3 text-sm text-terracotta">
             We couldn&rsquo;t reach our location data right now. Please check back soon.
           </p>

@@ -4,16 +4,18 @@ import Link from "next/link";
 // until real photography exists (spec §14 open item).
 export default function Hero() {
   return (
-    <section className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:px-6 sm:py-16 lg:grid-cols-2 lg:items-center">
+    <section className="mx-auto grid max-w-6xl gap-6 px-4 py-7 sm:px-6 sm:py-11 lg:grid-cols-2 lg:items-center">
       <div>
-        <h1 className="text-forest">Plants in the places you already go.</h1>
+        {/* Non-breaking space before the final word so "go." can't end up
+            orphaned alone on its own line at narrow widths. */}
+        <h1 className="text-forest">Plants in the places you already&nbsp;go.</h1>
         {/* TODO(copy): real one-line explanation */}
-        <p className="mt-4 max-w-md text-forest/80">
+        <p className="mt-3 max-w-md text-forest/80">
           We place curated plants in St. Louis coffee shops, wine bars, restaurants, and
           breweries. Buy what you see — we handle the care.
         </p>
 
-        <div className="mt-6 flex flex-wrap gap-3">
+        <div className="mt-4 flex flex-wrap gap-3">
           <a
             href="#map"
             className="rounded bg-forest px-5 py-2.5 text-sm font-semibold text-cream hover:bg-forest/90"
