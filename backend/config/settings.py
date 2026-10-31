@@ -8,13 +8,14 @@ Nothing secret lives in this file.
 from pathlib import Path
 
 import environ
+from django.core.exceptions import ImproperlyConfigured
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env(
     DJANGO_DEBUG=(bool, False),
 )
-# Read backend/.env when it exists (local dev). In production (Railway),
+# Read backend/.env when it exists (local dev). In production (Render),
 # real env vars are injected by the platform and this is a no-op.
 environ.Env.read_env(BASE_DIR / ".env")
 
@@ -24,6 +25,14 @@ environ.Env.read_env(BASE_DIR / ".env")
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 DEBUG = env("DJANGO_DEBUG")
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["localhost", "127.0.0.1"])
+
+# Render sets this automatically to the service's *.onrender.com hostname —
+# append it so ALLOWED_HOSTS doesn't need that hostname hand-typed into the
+# ALLOWED_HOSTS env var too (it's still there for the Vercel domain, a
+# future custom domain, etc). A no-op locally, where this var is unset.
+RENDER_EXTERNAL_HOSTNAME = env("RENDER_EXTERNAL_HOSTNAME", default="")
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 
 # --- Applications ---
@@ -46,6 +55,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -88,6 +98,14 @@ DATABASES = {
 
 CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default=["http://localhost:3000"])
 
+# Vercel gives every branch/PR its own preview URL
+# (forksandfarms-frontend-<hash>-<team>.vercel.app), so a fixed origin list
+# can't cover them. CORS_ALLOWED_ORIGIN_REGEX_VERCEL holds just this
+# project's preview pattern (set once the Vercel project exists — see the
+# deploy walkthrough) rather than trusting every *.vercel.app site.
+_vercel_preview_regex = env("CORS_ALLOWED_ORIGIN_REGEX_VERCEL", default="")
+CORS_ALLOWED_ORIGIN_REGEXES = [_vercel_preview_regex] if _vercel_preview_regex else []
+
 
 # --- Password validation ---
 
@@ -128,11 +146,12 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CLOUDINARY_URL = env("CLOUDINARY_URL", default="")
 
 if CLOUDINARY_URL:
-    INSTALLED_APPS = [
-        "cloudinary_storage",
-        *INSTALLED_APPS,
-        "cloudinary",
-    ]
+    # Deliberately NOT adding "cloudinary_storage"/"cloudinary" to
+    # INSTALLED_APPS: the storage backend below is just an import path
+    # and doesn't need app registration, and django-cloudinary-storage's
+    # bundled `collectstatic` command override still assumes Django's
+    # pre-6.0 STATICFILES_STORAGE setting — it crashes under STORAGES
+    # (which is what we use, and what WhiteNoise's static backend needs).
     # django-cloudinary-storage reads CLOUDINARY_URL from the environment
     # itself, so nothing further to parse here.
     STORAGES = {
@@ -145,6 +164,47 @@ else:
         "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
     }
 
+# WhiteNoise serves static files (admin CSS/JS) directly from the app —
+# no separate static host needed. This only overrides the "staticfiles"
+# backend set just above; it never touches "default" (media/Cloudinary).
+STORAGES["staticfiles"] = {
+    "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
+}
+
+
+# --- Production hardening ---
+
+if not DEBUG:
+    # Cloudinary required outside DEBUG: Render's disk isn't persistent
+    # across deploys, so a venue/application photo saved to local disk
+    # (the dev fallback above) would vanish on the next deploy. Fail
+    # loudly at startup rather than silently losing uploads later.
+    if not CLOUDINARY_URL:
+        raise ImproperlyConfigured(
+            "CLOUDINARY_URL must be set when DJANGO_DEBUG=False — local disk "
+            "storage is not persistent in production."
+        )
+
+    # Render terminates TLS at its own proxy and forwards plain HTTP to
+    # this app; without telling Django to trust that header, every
+    # request looks insecure and SECURE_SSL_REDIRECT below would loop.
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+    SECURE_SSL_REDIRECT = True
+    # /healthz/ is exempted: Render's health checker calls it over plain
+    # HTTP internally, and a 301 there (instead of the expected 200)
+    # would make Render think the deploy is unhealthy.
+    SECURE_REDIRECT_EXEMPT = [r"^healthz/$"]
+
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
+    # The admin's login form needs these for its CSRF check to pass
+    # behind a proxy — the onrender.com service URL and the Vercel
+    # frontend's own domain (admin is same-origin, but Django's CSRF
+    # check also consults this for cross-origin form posts).
+    CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
+
 
 # --- Django REST Framework ---
 
@@ -155,7 +215,7 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_RATES": {
         "partner_application": "5/hour",
     },
-    # Railway puts one reverse proxy in front of the app, which appends the
+    # Render puts one reverse proxy in front of the app, which appends the
     # real client IP to X-Forwarded-For. Without this, DRF's throttle (and
     # our source_ip capture in core.utils.get_client_ip) would read
     # REMOTE_ADDR — the proxy's own IP — and every visitor in production

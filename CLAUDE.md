@@ -17,8 +17,8 @@ This repo is the FnF web platform. We are building **Phase I**: a public site wi
 
 ## Stack
 - **Frontend:** Next.js (App Router, TypeScript), Tailwind CSS — in `frontend/`, deployed to Vercel
-- **Backend:** Django + Django REST Framework — in `backend/`, deployed to Railway
-- **Database:** PostgreSQL (Railway in production, local Postgres in dev)
+- **Backend:** Django + Django REST Framework — in `backend/`, deployed to Render
+- **Database:** PostgreSQL (Render managed Postgres in production, local Postgres in dev)
 - **Images:** Cloudinary · **Maps:** Google Maps JS API · **Email:** Resend · **Spam:** Cloudflare Turnstile
 - **Phase II (not now):** Square APIs for catalog, inventory, and payments
 

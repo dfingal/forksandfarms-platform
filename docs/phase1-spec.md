@@ -32,8 +32,8 @@ Build **only** Phase I scope, but never make choices that block Phase II (Square
 | Frontend | Next.js (App Router, TypeScript) + Tailwind CSS | Public site; pages pre-rendered for speed and SEO |
 | Frontend hosting | Vercel | Auto-deploys from GitHub, preview links per branch |
 | Backend | Django + Django REST Framework | API, data models, Django admin as the back office |
-| Backend hosting | Railway | Runs Django |
-| Database | PostgreSQL (Railway) | All data |
+| Backend hosting | Render | Runs Django |
+| Database | PostgreSQL (Render managed Postgres) | All data |
 | Images | Cloudinary | Venue photo storage + resizing |
 | Maps | Google Maps JavaScript API | Home map, venue mini-maps, custom pins |
 | Email | Resend | Notify FnF of new partner applications; confirmation to applicant |
@@ -247,7 +247,7 @@ Provide `.env.example` files in both `backend/` and `frontend/`.
 
 1. Backend foundation — Django project, Postgres, models, admin, API, seed data for St. Louis + 4 venues.
 2. Frontend foundation — Next.js, Tailwind theme tokens, header/footer, API client.
-3. Deploy — Vercel (frontend), Railway (backend + DB). Env vars wired.
+3. Deploy — Vercel (frontend), Render (backend + DB). Env vars wired.
 4. Home page.
 5. City list page + venue pages.
 6. Partner page, form, Turnstile, emails, thanks page.

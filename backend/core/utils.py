@@ -6,12 +6,12 @@ from django.conf import settings
 
 
 def get_client_ip(request):
-    """Return the real client IP, respecting Railway's reverse proxy.
+    """Return the real client IP, respecting Render's reverse proxy.
 
     Mirrors DRF's own throttle.get_ident() logic (see REST_FRAMEWORK
     NUM_PROXIES in settings.py) so the IP used for rate limiting and the
     one stored as PartnerApplication.source_ip always agree. Without this,
-    every request behind Railway's proxy would share the single proxy IP
+    every request behind Render's proxy would share the single proxy IP
     in REMOTE_ADDR and all visitors would share one rate limit bucket.
     """
     num_proxies = settings.REST_FRAMEWORK.get("NUM_PROXIES")

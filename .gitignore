@@ -21,6 +21,7 @@ __pycache__/
 venv/
 env/
 .python-version
+!backend/.python-version
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/

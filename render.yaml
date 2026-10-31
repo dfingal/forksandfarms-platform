@@ -1,0 +1,73 @@
+# Render Blueprint — see https://render.com/docs/blueprint-spec
+#
+# Deploys the Django backend as a web service plus a managed Postgres
+# database, both in the same region (required for low-latency DB access
+# and so they can be placed in the same private network).
+#
+# Secrets (sync: false) are NOT set here — fill them in from the Render
+# dashboard after the first blueprint deploy. See the deploy walkthrough
+# for exactly which values go where.
+
+databases:
+  - name: forksandfarms-db
+    plan: starter # paid — Render's free Postgres expires after 90 days
+    region: ohio # keep in the same region as the web service below
+    postgresMajorVersion: "17"
+
+services:
+  - type: web
+    name: forksandfarms-backend
+    runtime: python
+    rootDir: backend
+    plan: starter # paid instance — no cold starts, required for preDeployCommand
+    region: ohio # same region as forksandfarms-db above
+    # Build = install deps + collect static files only. Migrations do NOT
+    # run here — see preDeployCommand below.
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput"
+    # Runs once per deploy, after the build and before the new version
+    # takes traffic — this is where migrations belong on a paid instance
+    # (a free instance can't use preDeployCommand at all).
+    preDeployCommand: "python manage.py migrate"
+    startCommand: "gunicorn config.wsgi --bind 0.0.0.0:$PORT --log-file -"
+    # /healthz/ is exempted from the HTTPS redirect in settings.py — Render's
+    # health checker calls it over plain HTTP, and a redirect there would
+    # read as a failed check.
+    healthCheckPath: /healthz/
+    envVars:
+      # Pins the same Python version as backend/.python-version. Render
+      # supports either mechanism; setting both keeps them impossible to
+      # drift apart.
+      - key: PYTHON_VERSION
+        value: 3.14.10
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_SECRET_KEY
+        sync: false # generate fresh for production — see walkthrough
+      - key: ALLOWED_HOSTS
+        sync: false # the Vercel domain; RENDER_EXTERNAL_HOSTNAME is added automatically in code
+      - key: DATABASE_URL
+        fromDatabase:
+          name: forksandfarms-db
+          property: connectionString
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false # https://<your-vercel-domain>
+      - key: CORS_ALLOWED_ORIGIN_REGEX_VERCEL
+        sync: false # this project's Vercel preview URL pattern
+      - key: CSRF_TRUSTED_ORIGINS
+        sync: false # https://<onrender-url>,https://<vercel-domain>
+      - key: NUM_PROXIES
+        value: "1"
+      - key: CLOUDINARY_URL
+        sync: false # required — see settings.py's startup check
+      - key: RESEND_API_KEY
+        sync: false
+      - key: FNF_NOTIFY_EMAIL
+        sync: false
+      - key: FNF_FROM_EMAIL
+        sync: false
+      - key: TURNSTILE_SECRET_KEY
+        sync: false
+      - key: FRONTEND_REVALIDATE_URL
+        sync: false # https://<your-vercel-domain>/api/revalidate
+      - key: REVALIDATE_SECRET
+        sync: false
