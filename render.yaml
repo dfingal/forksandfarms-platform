@@ -10,7 +10,12 @@
 
 databases:
   - name: forksandfarms-db
-    plan: starter # paid — Render's free Postgres expires after 90 days
+    # Render retired the old "starter"-style Postgres plan names; this is
+    # the current smallest paid tier (0.1 CPU / 256MB RAM). Render's free
+    # Postgres also expires after 90 days, so paid is required either way.
+    # diskSizeGB is deliberately omitted — Render defaults new databases
+    # on a paid plan to 15GB, which is plenty for Phase I.
+    plan: 0.1c-256mb
     region: ohio # keep in the same region as the web service below
     postgresMajorVersion: "17"
 
@@ -19,7 +24,10 @@ services:
     name: forksandfarms-backend
     runtime: python
     rootDir: backend
-    plan: starter # paid instance — no cold starts, required for preDeployCommand
+    # Render also retired "starter" for web services — this is the
+    # current smallest paid tier (0.5 CPU / 512MB RAM). Paid (not free)
+    # is required for preDeployCommand to run at all.
+    plan: 0.5c-512mb
     region: ohio # same region as forksandfarms-db above
     # Build = install deps + collect static files only. Migrations do NOT
     # run here — see preDeployCommand below.
