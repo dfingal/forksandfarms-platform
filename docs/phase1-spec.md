@@ -96,13 +96,17 @@ Mobile: map on top, cards stacked in a single column; tapping a pin shows the ca
 - Unknown or paused venue → 404.
 
 ### 3.4 Partner page (`/partner`)
-1. **Intro** — headline ("Plants that pay their way."), short pitch; three value points: revenue from décor · no plant-care burden · draws customers who enjoy being around plants. Button "Apply below ↓".
-2. **Three ways to partner** — Retail Shelf, Design & Install, Lease + Maintenance; 1–2 line description each; Lease card carries a "Starts at 20 plants" tag.
-3. **How it works** — 01 Apply · 02 Walkthrough · 03 Install · 04 Ongoing care.
-4. **Application form** — fields in §4.3. Inline validation. Turnstile check. On success → `/partner/thanks`.
+1. **Hero** — headline ("Plants that pay their way."), one-line pitch, photo placeholder (plants in a venue). Button "Start the conversation" scrolls to the application form.
+2. **Why Forks And Farms** — short mission/story block (2–3 sentences, `TODO(copy)`) with a photo placeholder.
+3. **Why venues partner** — three benefits: revenue from your décor (earn on every plant sold) · zero plant care (we handle watering, rotation, replacements) · a space people want to stay in (customers come to be around the plants).
+4. **Proof** — active partner venues only, as photo cards pulled from the API, each linking to its venue page; a testimonial block (quote, name, venue — placeholder content, the whole block hidden if empty); an optional stat line (`TODO(copy)`).
+5. **Partnership options** — Retail Shelf, Design & Install, Lease + Maintenance; each with a 1–2 line description and a "Best for…" line (`TODO(copy)`); Lease card keeps the "Starts at 20 plants" tag. No pricing or revenue-share percentages shown.
+6. **How it works** — 01 Apply · 02 Walkthrough · 03 Install · 04 Ongoing care.
+7. **FAQ** — accordion: Who waters and maintains the plants? · What if a plant dies or gets damaged? · How much space do we need? · Is there a contract or commitment? · How does the revenue share work? · What does it cost us? (answers `TODO(copy)`).
+8. **Application form** (same page, `id="apply"`) — fields in §4.4. Inline validation. Turnstile widget (Cloudflare's test site key in dev/until a real key is set). Posts to `POST /api/v1/partner-applications/`. On success → `/partner/thanks`. Below the form: "Prefer to talk? Email hello@forksandfarms.com" (`TODO` confirm address).
 
 ### 3.5 Thanks (`/partner/thanks`)
-"Application received" badge, "Thanks, {first name}." (fallback "Thanks!"), "We'll be in touch at {email} to schedule a walkthrough." What-happens-next steps (Apply ✓, Walkthrough, Install, Ongoing care). Buttons: "See our locations", "Back to home".
+"Application received" badge, "Thanks, {first name}." (fallback "Thanks!" — first name only, read from client-side storage set on submit; the applicant's email is never put in the URL or kept around client-side, so it isn't echoed back on this page), "We'll be in touch soon to schedule a walkthrough." What-happens-next steps (Apply ✓, Walkthrough, Install, Ongoing care). Buttons: "See our locations", "Back to home".
 
 ---
 
