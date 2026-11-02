@@ -30,8 +30,10 @@ class City(TimestampedModel):
     slug = models.SlugField(unique=True)
     state = models.CharField(max_length=2)
     intro = models.TextField(blank=True, help_text="One-liner shown on the city page.")
-    map_center_lat = models.DecimalField(max_digits=9, decimal_places=6)
-    map_center_lng = models.DecimalField(max_digits=9, decimal_places=6)
+    # 7 decimal places matches the precision Google Maps copies/pastes give
+    # (max_digits=10 covers the full +/-180.0000000 longitude range).
+    map_center_lat = models.DecimalField(max_digits=10, decimal_places=7)
+    map_center_lng = models.DecimalField(max_digits=10, decimal_places=7)
     map_zoom = models.PositiveSmallIntegerField(default=12)
     timezone = models.CharField(
         max_length=64,
@@ -88,8 +90,9 @@ class Venue(TimestampedModel):
     address_line1 = models.CharField(max_length=255)
     address_line2 = models.CharField(max_length=255, blank=True)
     postal_code = models.CharField(max_length=10)
-    latitude = models.DecimalField(max_digits=9, decimal_places=6)
-    longitude = models.DecimalField(max_digits=9, decimal_places=6)
+    # See City.map_center_lat for why max_digits=10, decimal_places=7.
+    latitude = models.DecimalField(max_digits=10, decimal_places=7)
+    longitude = models.DecimalField(max_digits=10, decimal_places=7)
 
     # TODO(release): superseded by the OpeningHours model (structured,
     # per-day, supports split/overnight hours). Kept and still served by
