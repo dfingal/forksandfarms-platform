@@ -23,7 +23,7 @@ class PartnerApplicationCreateView(CreateAPIView):
         serializer.is_valid(raise_exception=True)
         application = serializer.save(source_ip=request.client_ip)
 
-        send_application_emails(application)
+        send_application_emails(application, request)
 
         return Response(
             {"id": application.id, "contact_name": application.contact_name},
