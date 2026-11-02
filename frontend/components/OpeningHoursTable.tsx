@@ -3,7 +3,10 @@ import type { OpeningHoursDay } from "@/lib/types";
 import TodayWeekdayStyle from "./TodayWeekdayStyle";
 
 interface OpeningHoursTableProps {
-  days: OpeningHoursDay[];
+  // Optional/nullable: the API field this comes from can lag behind a
+  // frontend deploy that already expects it (see lib/types.ts) — must
+  // degrade to the "coming soon" fallback below, never throw.
+  days: OpeningHoursDay[] | null | undefined;
   timezone: string;
 }
 
@@ -20,7 +23,7 @@ export default function OpeningHoursTable({ days, timezone }: OpeningHoursTableP
       <TodayWeekdayStyle timezone={timezone} />
       <table className="w-full text-sm">
         <tbody>
-          {days.map((day, i) => (
+          {(days ?? []).map((day, i) => (
             <tr key={day.day} data-weekday={i} className="text-forest/80">
               <td className="w-28 py-0.5 pr-4">{day.day}</td>
               <td className="py-0.5">

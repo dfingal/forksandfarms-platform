@@ -11,7 +11,10 @@ export interface City {
   map_center_lat: string;
   map_center_lng: string;
   map_zoom: number;
-  timezone: string; // IANA name, e.g. "America/Chicago"
+  // Optional: a Render preview/deploy can lag behind a frontend deploy
+  // that already expects this field (it was added after the rest of
+  // City) — never assume it's present.
+  timezone?: string | null; // IANA name, e.g. "America/Chicago"
 }
 
 export interface VenueCard {
@@ -59,7 +62,11 @@ export interface VenueDetail extends VenueCard {
   // TODO(release): superseded by opening_hours below; kept for backward
   // compatibility until nothing reads it.
   hours: Record<string, string>;
-  opening_hours: OpeningHoursDay[];
+  // Optional: a Render preview/deploy can lag behind a frontend deploy
+  // that already expects this field — a build must never crash just
+  // because the live API hasn't shipped it yet. Treat missing/null the
+  // same as "no hours set" everywhere this is read.
+  opening_hours?: OpeningHoursDay[] | null;
   website_url: string;
   instagram_handle: string;
 }

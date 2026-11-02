@@ -68,6 +68,16 @@ describe("hasAnySetHours", () => {
     days[0] = day({ day: "Monday", ranges: [{ open: "07:00", close: "19:00" }] });
     expect(hasAnySetHours(days)).toBe(true);
   });
+
+  it("is false (not a crash) when opening_hours is missing from the API response", () => {
+    // Exactly what happened against the live preview API before it had
+    // shipped this field: VenueDetail.opening_hours was simply absent.
+    expect(hasAnySetHours(undefined)).toBe(false);
+  });
+
+  it("is false (not a crash) when opening_hours is explicitly null", () => {
+    expect(hasAnySetHours(null)).toBe(false);
+  });
 });
 
 describe("todayWeekdayIndex", () => {

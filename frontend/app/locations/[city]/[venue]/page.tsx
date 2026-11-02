@@ -86,7 +86,7 @@ export default async function VenuePage({ params }: PageProps) {
     ...(venue.website_url ? { url: venue.website_url } : {}),
     ...(venueHasSetHours
       ? {
-          openingHoursSpecification: venue.opening_hours
+          openingHoursSpecification: (venue.opening_hours ?? [])
             .filter((day) => !day.is_closed && day.ranges.length > 0)
             .flatMap((day) =>
               day.ranges.map((range) => ({

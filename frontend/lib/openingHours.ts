@@ -30,9 +30,13 @@ export function formatDayRanges(ranges: OpeningHoursRange[]): string {
 }
 
 /** True if at least one day has been given real data (closed or has
- * hours) — i.e. this isn't still all 7 unset placeholder rows. */
-export function hasAnySetHours(days: OpeningHoursDay[]): boolean {
-  return days.some((d) => d.is_closed || d.ranges.length > 0);
+ * hours) — i.e. this isn't still all 7 unset placeholder rows.
+ *
+ * Accepts missing/null (a Render deploy can lag behind a frontend
+ * deploy that already expects opening_hours — see lib/types.ts) and
+ * just treats that the same as "no hours set", never throws. */
+export function hasAnySetHours(days: OpeningHoursDay[] | null | undefined): boolean {
+  return (days ?? []).some((d) => d.is_closed || d.ranges.length > 0);
 }
 
 /**
