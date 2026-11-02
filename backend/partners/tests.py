@@ -1,10 +1,10 @@
 from unittest.mock import patch
 
 from django.core.cache import cache
-from django.test import TestCase, override_settings
+from django.test import RequestFactory, TestCase, override_settings
 from django.urls import reverse
 
-from .integrations import verify_turnstile
+from .integrations import send_application_emails, verify_turnstile
 from .models import PartnerApplication
 
 
@@ -26,7 +26,7 @@ def valid_payload(**overrides):
     return payload
 
 
-@override_settings(DEBUG=True)  # verify_turnstile short-circuits to True
+@override_settings(DEBUG=True, RESEND_API_KEY="")  # Turnstile auto-passes; emails skipped (no network)
 class PartnerApplicationCreateTests(TestCase):
     url = reverse("partner-application-create")
 
@@ -129,3 +129,65 @@ class TurnstileVerificationTests(TestCase):
 
         with patch("partners.integrations.requests.post", side_effect=requests.RequestException):
             self.assertFalse(verify_turnstile("any-token"))
+
+
+def make_application(**overrides):
+    defaults = dict(
+        contact_name="Jamie Owner",
+        email="jamie@example.com",
+        phone="314-555-0100",
+        venue_name="Jamie's Cafe",
+        venue_type="coffee_shop",
+        address="100 Main St, St. Louis, MO 63101",
+        space_description="About 10 plants",
+        interested_tiers=["retail_shelf"],
+        referral_source="Instagram",
+        notes="",
+    )
+    defaults.update(overrides)
+    return PartnerApplication.objects.create(**defaults)
+
+
+class SendApplicationEmailsTests(TestCase):
+    """Unit tests for the Resend integration's skip/best-effort behavior."""
+
+    def setUp(self):
+        self.application = make_application()
+        self.request = RequestFactory().get("/")
+
+    @override_settings(RESEND_API_KEY="")
+    def test_no_key_configured_skips_without_network_call(self):
+        with patch("partners.integrations.requests.post") as mock_post:
+            send_application_emails(self.application, self.request)
+            mock_post.assert_not_called()
+
+    @override_settings(
+        RESEND_API_KEY="re_test",
+        FNF_NOTIFY_EMAIL="hello@forksandfarms.com",
+        FNF_FROM_EMAIL="Forks And Farms <hello@forksandfarms.com>",
+    )
+    def test_key_configured_sends_both_emails(self):
+        with patch("partners.integrations.requests.post") as mock_post:
+            mock_post.return_value.ok = True
+            send_application_emails(self.application, self.request)
+
+            self.assertEqual(mock_post.call_count, 2)
+            recipients = [call.kwargs["json"]["to"] for call in mock_post.call_args_list]
+            self.assertIn(["hello@forksandfarms.com"], recipients)
+            self.assertIn(["jamie@example.com"], recipients)
+
+            # The owner-notification email includes a working admin link.
+            owner_call = next(
+                c for c in mock_post.call_args_list if c.kwargs["json"]["to"] == ["hello@forksandfarms.com"]
+            )
+            self.assertIn(f"/admin/partners/partnerapplication/{self.application.pk}/change/",
+                           owner_call.kwargs["json"]["text"])
+
+    @override_settings(RESEND_API_KEY="re_test", FNF_NOTIFY_EMAIL="hello@forksandfarms.com")
+    def test_resend_failure_does_not_raise(self):
+        import requests
+
+        with patch("partners.integrations.requests.post", side_effect=requests.RequestException):
+            # Must not raise — an already-saved application shouldn't 500
+            # just because the email provider is down.
+            send_application_emails(self.application, self.request)
