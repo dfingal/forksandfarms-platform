@@ -11,6 +11,7 @@ export interface City {
   map_center_lat: string;
   map_center_lng: string;
   map_zoom: number;
+  timezone: string; // IANA name, e.g. "America/Chicago"
 }
 
 export interface VenueCard {
@@ -36,13 +37,29 @@ export interface VenuePhoto {
   order: number;
 }
 
+export interface OpeningHoursRange {
+  open: string; // "HH:MM", 24h
+  close: string; // "HH:MM", 24h — earlier than open means past midnight
+}
+
+export interface OpeningHoursDay {
+  day: string; // "Monday".."Sunday"
+  // Only true when a day is explicitly marked closed. False + empty
+  // ranges means "not set yet" — never render that as "Closed".
+  is_closed: boolean;
+  ranges: OpeningHoursRange[];
+}
+
 export interface VenueDetail extends VenueCard {
   setup_description: string;
   photos: VenuePhoto[];
   address_line1: string;
   address_line2: string;
   postal_code: string;
+  // TODO(release): superseded by opening_hours below; kept for backward
+  // compatibility until nothing reads it.
   hours: Record<string, string>;
+  opening_hours: OpeningHoursDay[];
   website_url: string;
   instagram_handle: string;
 }

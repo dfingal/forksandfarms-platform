@@ -3,9 +3,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCities, getCity, getVenue, getVenues } from "@/lib/api";
 import { VENUE_STATUS_LABELS } from "@/lib/labels";
-import { formatHours } from "@/lib/hours";
+import { hasAnySetHours } from "@/lib/openingHours";
 import VenueMap from "@/components/VenueMap";
 import VenueCard from "@/components/VenueCard";
+import OpeningHoursTable from "@/components/OpeningHoursTable";
 import PartnerCallout from "@/components/PartnerCallout";
 
 // Prerender every known public venue at build time...
@@ -66,10 +67,45 @@ export default async function VenuePage({ params }: PageProps) {
   const fullAddress = addressLines.join(", ");
   const directionsQuery = encodeURIComponent(`${venue.name}, ${fullAddress}`);
   const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${directionsQuery}`;
-  const hoursLines = formatHours(venue.hours);
+
+  const venueHasSetHours = hasAnySetHours(venue.opening_hours);
+  // Only include openingHoursSpecification when there's real data — an
+  // empty/placeholder spec would be actively misleading to search
+  // engines (and Google's own validator flags it).
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: venue.name,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: fullAddress,
+      addressLocality: cityName,
+      postalCode: venue.postal_code,
+      addressRegion: city?.state,
+    },
+    ...(venue.website_url ? { url: venue.website_url } : {}),
+    ...(venueHasSetHours
+      ? {
+          openingHoursSpecification: venue.opening_hours
+            .filter((day) => !day.is_closed && day.ranges.length > 0)
+            .flatMap((day) =>
+              day.ranges.map((range) => ({
+                "@type": "OpeningHoursSpecification",
+                dayOfWeek: `https://schema.org/${day.day}`,
+                opens: range.open,
+                closes: range.close,
+              }))
+            ),
+        }
+      : {}),
+  };
 
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <div className="mx-auto max-w-6xl px-4 py-5 sm:px-6">
         <Link href={`/locations/${citySlug}`} className="text-sm text-forest/70 hover:text-forest">
           ← All {cityName} locations
@@ -128,18 +164,13 @@ export default async function VenuePage({ params }: PageProps) {
             </a>
           </div>
 
-          {hoursLines.length > 0 && (
-            <div>
-              <h3 className="text-forest">Hours</h3>
-              <p className="text-sm text-forest/70">
-                {hoursLines.map((line) => (
-                  <span key={line} className="block">
-                    {line}
-                  </span>
-                ))}
-              </p>
-            </div>
-          )}
+          <div>
+            <h3 className="text-forest">Hours</h3>
+            <OpeningHoursTable
+              days={venue.opening_hours}
+              timezone={city?.timezone ?? "America/Chicago"}
+            />
+          </div>
 
           {venue.website_url && (
             <div>

@@ -1,10 +1,18 @@
 """
-Core models: City, Venue, VenuePhoto.
+Core models: City, Venue, VenuePhoto, OpeningHours.
 
 See docs/phase1-spec.md §4 for field definitions and rationale.
 """
 
+from zoneinfo import available_timezones
+
+from django.core.exceptions import ValidationError
 from django.db import models
+
+
+def validate_timezone(value):
+    if value not in available_timezones():
+        raise ValidationError(f"{value!r} is not a known IANA timezone name.")
 
 
 class TimestampedModel(models.Model):
@@ -25,6 +33,13 @@ class City(TimestampedModel):
     map_center_lat = models.DecimalField(max_digits=9, decimal_places=6)
     map_center_lng = models.DecimalField(max_digits=9, decimal_places=6)
     map_zoom = models.PositiveSmallIntegerField(default=12)
+    timezone = models.CharField(
+        max_length=64,
+        default="America/Chicago",
+        validators=[validate_timezone],
+        help_text="IANA timezone name, e.g. America/Chicago. Used to work out "
+        "venues' current-day opening hours.",
+    )
     is_active = models.BooleanField(
         default=True, help_text="Hidden from the public site if unchecked."
     )
@@ -76,6 +91,10 @@ class Venue(TimestampedModel):
     latitude = models.DecimalField(max_digits=9, decimal_places=6)
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
 
+    # TODO(release): superseded by the OpeningHours model (structured,
+    # per-day, supports split/overnight hours). Kept and still served by
+    # the API for backward compatibility — drop this field once nothing
+    # still reads it.
     hours = models.JSONField(
         default=dict,
         blank=True,
@@ -104,6 +123,82 @@ class Venue(TimestampedModel):
 
     def __str__(self):
         return f"{self.name} ({self.city.name})"
+
+
+class OpeningHours(TimestampedModel):
+    """One time range for one weekday of one venue.
+
+    A day can have more than one row (split hours, e.g. 11-2 and 5-9) —
+    `order` controls which comes first. Every venue is meant to always
+    have exactly 7 "baseline" rows (one per weekday, created by the
+    post_save signal below or the 0004 data migration); split hours just
+    mean extra rows sharing the same weekday.
+
+    Three states per row, not two:
+    - is_closed=True (times blank): explicitly closed that day.
+    - is_closed=False, both times blank: not set yet — a placeholder,
+      NOT the same as closed. The admin/API/frontend must all treat
+      this as "we don't know", never as "closed".
+    - is_closed=False, both times set: open for that range.
+    """
+
+    class Weekday(models.IntegerChoices):
+        MONDAY = 0, "Monday"
+        TUESDAY = 1, "Tuesday"
+        WEDNESDAY = 2, "Wednesday"
+        THURSDAY = 3, "Thursday"
+        FRIDAY = 4, "Friday"
+        SATURDAY = 5, "Saturday"
+        SUNDAY = 6, "Sunday"
+
+    venue = models.ForeignKey(Venue, on_delete=models.CASCADE, related_name="opening_hours")
+    weekday = models.PositiveSmallIntegerField(choices=Weekday.choices)
+    is_closed = models.BooleanField(default=False)
+    open_time = models.TimeField(
+        null=True, blank=True, help_text="Leave blank (with Closed unchecked) if not yet known."
+    )
+    close_time = models.TimeField(
+        null=True,
+        blank=True,
+        help_text="Earlier than open time means open past midnight (e.g. 6pm-2am).",
+    )
+    order = models.PositiveSmallIntegerField(
+        default=0, help_text="For split hours (multiple ranges the same day) — lower shows first."
+    )
+
+    class Meta:
+        verbose_name_plural = "opening hours"
+        ordering = ["weekday", "order"]
+
+    @property
+    def is_unset(self):
+        return not self.is_closed and self.open_time is None and self.close_time is None
+
+    def clean(self):
+        if self.is_closed:
+            if self.open_time is not None or self.close_time is not None:
+                raise ValidationError("A closed day shouldn't have open/close times set.")
+            return
+
+        has_open = self.open_time is not None
+        has_close = self.close_time is not None
+        if has_open != has_close:
+            raise ValidationError(
+                "Set both open and close time, or leave both blank if not yet known."
+            )
+        if has_open and has_close and self.open_time == self.close_time:
+            # Deliberately not supporting "24 hours" via equal times — too
+            # ambiguous with the placeholder/unset state. Not expected in
+            # Phase I; revisit if a venue genuinely needs 24-hour hours.
+            raise ValidationError("Open and close time can't be identical.")
+
+    def __str__(self):
+        label = self.get_weekday_display()
+        if self.is_closed:
+            return f"{self.venue.name} — {label}: Closed"
+        if self.is_unset:
+            return f"{self.venue.name} — {label}: (not set)"
+        return f"{self.venue.name} — {label}: {self.open_time}–{self.close_time}"
 
 
 class VenuePhoto(TimestampedModel):
