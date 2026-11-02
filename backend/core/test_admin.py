@@ -69,6 +69,12 @@ def venue_form_data(city, **overrides):
         "photos-INITIAL_FORMS": "0",
         "photos-MIN_NUM_FORMS": "0",
         "photos-MAX_NUM_FORMS": "1000",
+        # OpeningHoursInline management form (added once OpeningHours
+        # landed on main) — required even with 0 rows in the POST.
+        "opening_hours-TOTAL_FORMS": "0",
+        "opening_hours-INITIAL_FORMS": "0",
+        "opening_hours-MIN_NUM_FORMS": "0",
+        "opening_hours-MAX_NUM_FORMS": "1000",
     }
     data.update(overrides)
     return data
@@ -211,6 +217,7 @@ def city_form_data(**overrides):
         "map_center_lat": "38.627000",
         "map_center_lng": "-90.199400",
         "map_zoom": 12,
+        "timezone": "America/Chicago",
     }
     data.update(overrides)
     return data
