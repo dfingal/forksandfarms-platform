@@ -213,6 +213,10 @@ Notes:
   2. To applicant: "Thanks, we got your application — we'll reach out to schedule a walkthrough."
 - **Turnstile**: frontend renders widget; backend verifies token before saving.
 - **Page freshness**: Next.js pages are statically generated and revalidated. When a City or Venue is saved in admin, Django calls a protected Next.js revalidate endpoint so changes appear within seconds (fallback: time-based revalidation every 10 minutes).
+  - **Endpoint**: `POST /api/revalidate` (`frontend/app/api/revalidate/route.ts`), secret in the `X-Revalidate-Secret` header (`REVALIDATE_SECRET`, same value on both sides), body `{"paths": [...]}`. Only `/`, `/partner`, `/locations/{city}` and `/locations/{city}/{venue}` are accepted (max 100 per request); one bad path rejects the request.
+  - **Trigger** (`backend/core/revalidation.py`, `core/signals.py`): save/delete of City, Venue, VenuePhoto or OpeningHours. Paths are batched per transaction (one request per admin save), sent after commit in a background thread with a 3s timeout; failures are logged and never block the save. Skipped silently if `FRONTEND_REVALIDATE_URL` or `REVALIDATE_SECRET` is unset.
+  - **Pages refreshed**: `/`, `/partner`, the city page, and every venue page in the city (venue pages show other venues under "Other locations"). Slug or city changes also refresh the old URLs so they 404 promptly.
+  - **Manual**: admin action "Refresh live site pages" on Cities and Venues (waits for the result and reports success/failure).
 - **Map pins**: custom SVG pin in brand colors; pins only for public venues.
 - **Google Maps key**: restricted to production + preview domains; daily quota cap set in Google Cloud.
 
