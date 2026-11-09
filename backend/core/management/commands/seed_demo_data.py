@@ -13,6 +13,7 @@ seeds placeholder/demo content — a production run should be deliberate).
 
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
+from django.db import transaction
 
 from core.models import City, OpeningHours, Venue
 
@@ -124,6 +125,9 @@ class Command(BaseCommand):
             help="Required to run this when DJANGO_DEBUG=False (it seeds placeholder/demo content).",
         )
 
+    # atomic: all-or-nothing, and the live-site refresh triggered by these
+    # saves goes out as one batched request at the end (core/revalidation.py).
+    @transaction.atomic
     def handle(self, *args, **options):
         if not settings.DEBUG and not options["force"]:
             raise CommandError(
