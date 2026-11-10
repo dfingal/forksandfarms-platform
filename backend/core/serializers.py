@@ -9,6 +9,19 @@ by accident when a field is later added to the model.
 from rest_framework import serializers
 
 from .models import City, OpeningHours, Venue, VenuePhoto
+from .seo import seo_payload
+
+
+class SEOField(serializers.Field):
+    """The public `seo` object (core/seo.py) — resolved title,
+    description, share image, canonical and noindex, with fallbacks
+    already applied. Never includes target_phrases."""
+
+    def __init__(self, **kwargs):
+        super().__init__(source="*", read_only=True, **kwargs)
+
+    def to_representation(self, obj):
+        return seo_payload(obj, self.context.get("request"))
 
 
 class CitySerializer(serializers.ModelSerializer):
@@ -52,6 +65,7 @@ class CityDetailSerializer(serializers.ModelSerializer):
     """City + its public venues (card fields), for GET /cities/{slug}/."""
 
     venues = serializers.SerializerMethodField()
+    seo = SEOField()
 
     class Meta:
         model = City
@@ -65,6 +79,7 @@ class CityDetailSerializer(serializers.ModelSerializer):
             "map_zoom",
             "timezone",
             "venues",
+            "seo",
         ]
 
     def get_venues(self, city):
@@ -89,6 +104,7 @@ class VenueDetailSerializer(serializers.ModelSerializer):
     hero_image = serializers.ImageField(use_url=True)
     photos = VenuePhotoSerializer(many=True, read_only=True)
     opening_hours = serializers.SerializerMethodField()
+    seo = SEOField()
 
     class Meta:
         model = Venue
@@ -114,6 +130,7 @@ class VenueDetailSerializer(serializers.ModelSerializer):
             "opening_hours",
             "website_url",
             "instagram_handle",
+            "seo",
         ]
 
     def get_opening_hours(self, venue):

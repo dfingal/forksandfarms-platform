@@ -236,6 +236,11 @@ TURNSTILE_SECRET_KEY = env("TURNSTILE_SECRET_KEY", default="")
 FRONTEND_REVALIDATE_URL = env("FRONTEND_REVALIDATE_URL", default="")
 REVALIDATE_SECRET = env("REVALIDATE_SECRET", default="")
 
+# The public site's address, e.g. https://forksandfarms.com (no trailing
+# slash). Only used for the Google-result preview in admin; when blank
+# the preview shows just the page path.
+PUBLIC_SITE_URL = env("PUBLIC_SITE_URL", default="").rstrip("/")
+
 
 # --- Logging ---
 # Print the core app's INFO+ messages (e.g. "Revalidated 6 page(s)" or a failed

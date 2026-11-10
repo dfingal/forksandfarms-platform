@@ -1,3 +1,6 @@
+from urllib.parse import urlsplit
+
+from django.conf import settings
 from django.contrib import admin, messages
 from django.db import transaction
 from django.utils.html import format_html
@@ -5,6 +8,81 @@ from django.utils.html import format_html
 from . import revalidation
 from .admin_forms import CoordinatePasteFormMixin, RoundedDecimalField
 from .models import City, OpeningHours, Venue, VenuePhoto
+from .seo import DESCRIPTION_SOFT_LIMIT, TITLE_SOFT_LIMIT, truncate_at_word
+
+
+class SEOAdminMixin:
+    """Adds the "SEO" section (fields from core/seo.py's SEOFieldsMixin)
+    with live character counters and a Google-result preview. The
+    counters and live updating are core/static/core/admin/seo.js; this
+    class renders the preview's starting state (including the automatic
+    fallback values, which the script shows whenever a field is blank).
+
+    Reuse on any admin whose model uses SEOFieldsMixin: subclass it and
+    add SEO_FIELDSET to the fieldsets.
+    """
+
+    SEO_FIELDSET = (
+        "SEO",
+        {
+            "fields": (
+                "seo_preview",
+                "seo_title",
+                "meta_description",
+                "target_phrases",
+                "og_image",
+                "noindex",
+                "canonical_url",
+            ),
+            "classes": ("collapse",),
+            "description": "Everything here is optional — leave a field blank to use the automatic "
+            "value shown in the preview.",
+        },
+    )
+
+    class Media:
+        js = ("core/admin/seo.js",)
+        css = {"all": ("core/admin/seo.css",)}
+
+    def get_readonly_fields(self, request, obj=None):
+        return (*super().get_readonly_fields(request, obj), "seo_preview")
+
+    @admin.display(description="Google preview")
+    def seo_preview(self, obj):
+        saved = obj is not None and obj.pk is not None
+        automatic = "(automatic — shown after saving)"
+        # The automatic values, which the script shows whenever the
+        # matching field is blank.
+        fallback_title = obj.default_seo_title() if saved else automatic
+        fallback_description = (
+            truncate_at_word(obj.default_meta_description()) if saved else automatic
+        )
+
+        return format_html(
+            '<div class="seo-preview" data-fallback-title="{}" data-fallback-description="{}" '
+            'data-title-limit="{}" data-description-limit="{}">'
+            '<div class="seo-preview__url">{}</div>'
+            '<div class="seo-preview__title">{}</div>'
+            '<div class="seo-preview__description">{}</div>'
+            '<div class="seo-preview__noindex">Hidden from search engines — Google won\'t list this page.</div>'
+            "</div>",
+            fallback_title,
+            fallback_description,
+            TITLE_SOFT_LIMIT,
+            DESCRIPTION_SOFT_LIMIT,
+            self._preview_url(obj) if saved else "",
+            obj.resolved_seo_title() if saved else automatic,
+            obj.resolved_meta_description() if saved else automatic,
+        )
+
+    @staticmethod
+    def _preview_url(obj):
+        """Google-style breadcrumb URL, e.g. "forksandfarms.com › locations
+        › st-louis". Just the path if PUBLIC_SITE_URL isn't set."""
+        path = obj.public_path()
+        site = urlsplit(settings.PUBLIC_SITE_URL).netloc if settings.PUBLIC_SITE_URL else ""
+        parts = [site, *path.strip("/").split("/")] if site else [path]
+        return " › ".join(part for part in parts if part)
 
 
 @admin.action(description="Refresh live site pages")
@@ -39,7 +117,7 @@ class CityAdminForm(CoordinatePasteFormMixin):
 
 
 @admin.register(City)
-class CityAdmin(admin.ModelAdmin):
+class CityAdmin(SEOAdminMixin, admin.ModelAdmin):
     form = CityAdminForm
     list_display = ("name", "state", "timezone", "is_active")
     list_filter = ("is_active", "state")
@@ -59,6 +137,7 @@ class CityAdmin(admin.ModelAdmin):
                 )
             },
         ),
+        SEOAdminMixin.SEO_FIELDSET,
     )
 
 
@@ -138,7 +217,7 @@ class VenueAdminForm(CoordinatePasteFormMixin):
 
 
 @admin.register(Venue)
-class VenueAdmin(admin.ModelAdmin):
+class VenueAdmin(SEOAdminMixin, admin.ModelAdmin):
     form = VenueAdminForm
     list_display = ("name", "city", "neighborhood", "status", "partner_tier", "display_order")
     list_filter = ("city", "status", "partner_tier")
@@ -174,6 +253,7 @@ class VenueAdmin(admin.ModelAdmin):
             },
         ),
         ("Content", {"fields": ("short_description", "setup_description", "hero_image")}),
+        SEOAdminMixin.SEO_FIELDSET,
         ("Phase II (do not use yet)", {"fields": ("square_location_id",), "classes": ("collapse",)}),
     )
 

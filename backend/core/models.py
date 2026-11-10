@@ -9,6 +9,8 @@ from zoneinfo import available_timezones
 from django.core.exceptions import ValidationError
 from django.db import models
 
+from .seo import SEOFieldsMixin
+
 
 def validate_timezone(value):
     if value not in available_timezones():
@@ -25,7 +27,7 @@ class TimestampedModel(models.Model):
         abstract = True
 
 
-class City(TimestampedModel):
+class City(SEOFieldsMixin, TimestampedModel):
     name = models.CharField(max_length=100)
     slug = models.SlugField(unique=True)
     state = models.CharField(max_length=2)
@@ -53,8 +55,18 @@ class City(TimestampedModel):
     def __str__(self):
         return self.name
 
+    # SEO fallbacks (see core/seo.py)
+    def default_seo_title(self):
+        return f"Forks And Farms in {self.name}"
 
-class Venue(TimestampedModel):
+    def default_meta_description(self):
+        return self.intro or f"Find Forks And Farms plant locations in {self.name}."
+
+    def public_path(self):
+        return f"/locations/{self.slug}"
+
+
+class Venue(SEOFieldsMixin, TimestampedModel):
     class VenueType(models.TextChoices):
         COFFEE_SHOP = "coffee_shop", "Coffee shop"
         RESTAURANT = "restaurant", "Restaurant"
@@ -126,6 +138,21 @@ class Venue(TimestampedModel):
 
     def __str__(self):
         return f"{self.name} ({self.city.name})"
+
+    # SEO fallbacks (see core/seo.py)
+    def default_seo_title(self):
+        return f"Plants at {self.name} · Forks And Farms"
+
+    def default_meta_description(self):
+        if self.short_description:
+            return f"{self.neighborhood} — {self.short_description}"
+        return f"Find Forks And Farms plants at {self.name} in {self.neighborhood}."
+
+    def default_og_image(self):
+        return self.hero_image or None
+
+    def public_path(self):
+        return f"/locations/{self.city.slug}/{self.slug}"
 
 
 class OpeningHours(TimestampedModel):
