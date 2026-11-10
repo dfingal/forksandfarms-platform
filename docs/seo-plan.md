@@ -1,8 +1,12 @@
-# SEO fields — approved plan (not built yet)
+# SEO fields — plan (implemented)
 
-**Status:** approved 2026-11-09, paused. Build on `feature/seo-fields`,
-branched from `main` **after** `feature/instant-revalidation` is merged.
-Phase I scope (spec §9 "SEO & analytics").
+**Status:** implemented on `feature/seo-fields` (2026-11-10). Phase I scope
+(spec §4.3a, §5, §9). Changes from the original plan, both approved:
+- The admin preview URL uses a new backend setting, `PUBLIC_SITE_URL`
+  (path only if unset), rather than being derived from `FRONTEND_REVALIDATE_URL`.
+- `og_image` help text: "Recommended 1200 × 630 px, landscape JPG/PNG."
+- Decisions: `seo_title` is used exactly as typed; noindex pages stay
+  linked on the site; a venue without a hero image uses the default share image.
 
 ## Goal
 Let the owner edit SEO metadata for cities and venues in Django admin,

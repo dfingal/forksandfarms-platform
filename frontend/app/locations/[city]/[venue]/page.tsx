@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getCities, getCity, getVenue, getVenues } from "@/lib/api";
 import { VENUE_STATUS_LABELS } from "@/lib/labels";
 import { hasAnySetHours } from "@/lib/openingHours";
+import { buildMetadata } from "@/lib/seo";
 import VenueMap from "@/components/VenueMap";
 import VenueCard from "@/components/VenueCard";
 import OpeningHoursTable from "@/components/OpeningHoursTable";
@@ -40,11 +41,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const venue = await getVenue(citySlug, venueSlug);
   if (!venue) return {};
 
-  return {
+  return buildMetadata(venue.seo, {
     title: `Plants at ${venue.name} · Forks And Farms`,
     description:
       venue.short_description || `Find Forks And Farms plants at ${venue.name} in ${venue.neighborhood}.`,
-  };
+    path: `/locations/${citySlug}/${venueSlug}`,
+  });
 }
 
 export default async function VenuePage({ params }: PageProps) {

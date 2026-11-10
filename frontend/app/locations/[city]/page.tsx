@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getCities, getCity } from "@/lib/api";
+import { buildMetadata } from "@/lib/seo";
 import VenueCardGrid from "@/components/VenueCardGrid";
 import PartnerCallout from "@/components/PartnerCallout";
 
@@ -25,10 +26,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const city = await getCity(citySlug);
   if (!city) return {};
 
-  return {
+  return buildMetadata(city.seo, {
     title: `Forks And Farms in ${city.name}`,
     description: city.intro || `Find Forks And Farms plant locations in ${city.name}.`,
-  };
+    path: `/locations/${citySlug}`,
+  });
 }
 
 export default async function CityLocationsPage({ params }: PageProps) {

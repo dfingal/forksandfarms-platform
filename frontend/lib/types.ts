@@ -30,8 +30,24 @@ export interface VenueCard {
   longitude: string;
 }
 
+/**
+ * The resolved SEO object from the city/venue detail endpoints
+ * (backend/core/seo.py). Fallbacks are already applied by the backend;
+ * og_image is null when there's no image (use the site-wide default).
+ */
+export interface SeoMeta {
+  title: string;
+  description: string;
+  og_image: string | null; // absolute URL
+  canonical_url: string | null;
+  noindex: boolean;
+}
+
 export interface CityDetail extends City {
   venues: VenueCard[];
+  // Optional for the same reason as VenueDetail.opening_hours: the
+  // frontend may deploy before the backend that adds it.
+  seo?: SeoMeta | null;
 }
 
 export interface VenuePhoto {
@@ -69,6 +85,8 @@ export interface VenueDetail extends VenueCard {
   opening_hours?: OpeningHoursDay[] | null;
   website_url: string;
   instagram_handle: string;
+  // Optional: see CityDetail.seo.
+  seo?: SeoMeta | null;
 }
 
 // venue_type choices, shared with the partner application form
