@@ -158,6 +158,23 @@ All models get `created_at` and `updated_at` timestamps.
 | alt_text | char(200) | Required for accessibility |
 | order | int, default 0 | |
 
+### 4.3a SEO fields (City and Venue)
+Added via the reusable abstract `SEOFieldsMixin` (`backend/core/seo.py`). Neighborhood/Tag can reuse it later. All fields are optional; blank means "use the automatic value". See `docs/seo-plan.md`.
+
+| Field | Type | Notes |
+|---|---|---|
+| seo_title | char(200), blank | Used exactly as written. Aim for about 60 chars (admin warns, doesn't block). |
+| meta_description | char(320), blank | Aim for about 160 chars. |
+| og_image | Cloudinary image, blank | Share image; recommended 1200 × 630 px. |
+| target_phrases | text, blank | **Internal only.** A copywriting aid, never exposed publicly. |
+| noindex | bool, default False | Asks search engines not to list the page; it stays on the site. |
+| canonical_url | URL, blank | Only if the content's main home is elsewhere. |
+
+Fallbacks:
+- **Venue:** title `Plants at {venue} · Forks And Farms`; description `{neighborhood} — {short_description}`; image is the hero image.
+- **City:** title `Forks And Farms in {city}`; description is the intro, else a generic line; image is the site-wide default (`frontend/public/og-default.png`).
+- Fallback descriptions are truncated to about 160 chars at a word boundary.
+
 ### 4.4 PartnerApplication
 | Field | Type | Notes |
 |---|---|---|
@@ -185,13 +202,14 @@ Base path: `/api/v1/`. JSON only. Public read endpoints are unauthenticated; onl
 | Method | Endpoint | Returns / does |
 |---|---|---|
 | GET | `/cities/` | Active cities: name, slug, state, intro, map center/zoom |
-| GET | `/cities/{city_slug}/` | One city + its public venues (card fields) |
+| GET | `/cities/{city_slug}/` | One city + its public venues (card fields) + `seo` |
 | GET | `/venues/?city={slug}` | Public venues, card fields (id, name, slug, city slug, neighborhood, status, short_description, hero_image URL, lat/lng) |
-| GET | `/cities/{city_slug}/venues/{venue_slug}/` | Full venue detail incl. photos, hours, address, website, setup_description |
+| GET | `/cities/{city_slug}/venues/{venue_slug}/` | Full venue detail incl. photos, hours, address, website, setup_description, `seo` |
 | POST | `/partner-applications/` | Validates, verifies Turnstile token, saves, sends emails. Returns `201 {id, contact_name}` |
 
 Notes:
-- Never expose `partner_tier`, `square_location_id`, or any PartnerApplication data via public GET.
+- Never expose `partner_tier`, `square_location_id`, `target_phrases`, or any PartnerApplication data via public GET.
+- `seo` (detail endpoints only) is `{title, description, og_image, canonical_url, noindex}` with fallbacks already applied (§4.3a). `og_image` is an absolute URL, or `null` (the frontend then uses its default share image). `canonical_url` is `null` unless set in admin.
 - POST is rate-limited (DRF throttle, e.g. 5/hour per IP).
 - Image URLs returned as Cloudinary URLs; frontend requests sized variants.
 - CORS: allow the Vercel production domain + preview domains + localhost.
@@ -201,6 +219,7 @@ Notes:
 ## 6. Django admin (back office)
 
 - **City** — list: name, state, active.
+- **City & Venue** — a collapsible "SEO" section with live character counters (title about 60, description about 160) and a Google-result preview. The preview URL uses `PUBLIC_SITE_URL`, or just the path if unset.
 - **Venue** — list: name, city, neighborhood, status, tier, display_order; filters: city, status, tier; slug auto-filled from name; inline VenuePhoto editor; map coordinates editable.
 - **PartnerApplication** — list: venue_name, contact_name, email, status, created_at; filters: status, venue_type, interested tiers; search by name/email/venue; status editable from the list; action "Create Venue from application" (pre-fills a draft Venue with status `coming_soon`).
 
@@ -235,7 +254,8 @@ Notes:
 
 - Unique `<title>` and meta description per page; venue pages use venue name + neighborhood ("Plants at Northwest Coffee · Forks And Farms").
 - Open Graph image per venue (hero image).
-- `sitemap.xml` and `robots.txt` generated from cities/venues.
+- **Admin-editable SEO** (§4.3a): city and venue pages build their metadata from the API's `seo` object (`frontend/lib/seo.ts`). That covers title, description, Open Graph/Twitter image, canonical, and `robots: noindex, follow`. If `seo` is missing, they fall back to the pre-SEO titles. `metadataBase` comes from `NEXT_PUBLIC_SITE_URL`. A default canonical is only emitted when that is set.
+- `sitemap.xml` and `robots.txt` generated from cities/venues. **Not built yet.** When built, the sitemap **must exclude `noindex` pages** (and those pages need a way to be identified, e.g. adding `noindex` to the list endpoints or a dedicated sitemap endpoint).
 - LocalBusiness-style structured data on venue pages (optional, nice to have).
 - Privacy-friendly analytics (e.g. Vercel Analytics or Plausible); track "Partner With Us" clicks and form submissions.
 
@@ -244,8 +264,8 @@ Notes:
 ## 10. Environments & config
 
 Env vars (never committed):
-- Backend: `DATABASE_URL`, `DJANGO_SECRET_KEY`, `ALLOWED_HOSTS`, `CORS_ALLOWED_ORIGINS`, `CLOUDINARY_URL`, `RESEND_API_KEY`, `TURNSTILE_SECRET_KEY`, `FNF_NOTIFY_EMAIL`, `FRONTEND_REVALIDATE_URL`, `REVALIDATE_SECRET`
-- Frontend: `NEXT_PUBLIC_API_BASE_URL`, `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`, `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `REVALIDATE_SECRET`
+- Backend: `DATABASE_URL`, `DJANGO_SECRET_KEY`, `ALLOWED_HOSTS`, `CORS_ALLOWED_ORIGINS`, `CLOUDINARY_URL`, `RESEND_API_KEY`, `TURNSTILE_SECRET_KEY`, `FNF_NOTIFY_EMAIL`, `FRONTEND_REVALIDATE_URL`, `REVALIDATE_SECRET`, `PUBLIC_SITE_URL`
+- Frontend: `NEXT_PUBLIC_API_BASE_URL`, `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`, `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `REVALIDATE_SECRET`, `NEXT_PUBLIC_SITE_URL`
 
 Provide `.env.example` files in both `backend/` and `frontend/`.
 
