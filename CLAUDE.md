@@ -62,6 +62,7 @@ cd frontend
 npm run dev                         # http://localhost:3000
 npm run build
 npm run lint
+npm test                            # vitest
 ```
 
 ## Git

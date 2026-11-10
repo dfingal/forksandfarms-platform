@@ -226,8 +226,8 @@ REST_FRAMEWORK = {
 
 
 # --- Email (Resend), Turnstile, revalidation ---
-# Read here now so settings is the one place that touches env vars; wired
-# into views in the API step (spec §5/§7).
+# FRONTEND_REVALIDATE_URL / REVALIDATE_SECRET are used by
+# core/revalidation.py; leave either blank to turn live-site refresh off.
 
 RESEND_API_KEY = env("RESEND_API_KEY", default="")
 FNF_NOTIFY_EMAIL = env("FNF_NOTIFY_EMAIL", default="")
@@ -235,3 +235,16 @@ FNF_FROM_EMAIL = env("FNF_FROM_EMAIL", default="")
 TURNSTILE_SECRET_KEY = env("TURNSTILE_SECRET_KEY", default="")
 FRONTEND_REVALIDATE_URL = env("FRONTEND_REVALIDATE_URL", default="")
 REVALIDATE_SECRET = env("REVALIDATE_SECRET", default="")
+
+
+# --- Logging ---
+# Print the core app's INFO+ messages (e.g. "Revalidated 6 page(s)" or a failed
+# live-site refresh) to the console, which is where Render collects logs.
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {"console": {"class": "logging.StreamHandler"}},
+    "loggers": {
+        "core": {"handlers": ["console"], "level": "INFO"},
+    },
+}

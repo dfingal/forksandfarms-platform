@@ -1,8 +1,29 @@
 from django.contrib import admin, messages
+from django.db import transaction
 from django.utils.html import format_html
 
+from . import revalidation
 from .admin_forms import CoordinatePasteFormMixin, RoundedDecimalField
 from .models import City, OpeningHours, Venue, VenuePhoto
+
+
+@admin.action(description="Refresh live site pages")
+def refresh_live_site_pages(modeladmin, request, queryset):
+    """Manually ask the Next.js site to rebuild the selected cities'/
+    venues' pages — handy if an automatic refresh after a save was missed
+    (e.g. the site was briefly down). Unlike the automatic refresh this
+    waits for the answer, so it can say whether it worked."""
+    paths = set()
+    for obj in queryset:
+        if isinstance(obj, City):
+            paths |= revalidation.paths_for_city(obj)
+        else:
+            paths |= revalidation.paths_for_venue(obj)
+
+    ok, message = revalidation.send_revalidation(
+        sorted(paths), timeout=revalidation.ADMIN_ACTION_TIMEOUT_SECONDS
+    )
+    modeladmin.message_user(request, message, level=messages.SUCCESS if ok else messages.ERROR)
 
 
 class CityAdminForm(CoordinatePasteFormMixin):
@@ -24,6 +45,7 @@ class CityAdmin(admin.ModelAdmin):
     list_filter = ("is_active", "state")
     search_fields = ("name",)
     prepopulated_fields = {"slug": ("name",)}
+    actions = [refresh_live_site_pages]
     fieldsets = (
         (None, {"fields": ("name", "slug", "state", "intro", "is_active")}),
         (
@@ -71,7 +93,6 @@ def copy_monday_to_all_days(modeladmin, request, queryset):
             skipped += 1
             continue
 
-        venue.opening_hours.exclude(weekday=OpeningHours.Weekday.MONDAY).delete()
         new_rows = [
             OpeningHours(
                 venue=venue,
@@ -85,7 +106,13 @@ def copy_monday_to_all_days(modeladmin, request, queryset):
             if weekday != OpeningHours.Weekday.MONDAY
             for row in monday_rows
         ]
-        OpeningHours.objects.bulk_create(new_rows)
+        # One transaction per venue: never left half-copied, and the
+        # live-site refresh only goes out once the new rows are in place.
+        # (bulk_create sends no signals, so ask for the refresh directly.)
+        with transaction.atomic():
+            venue.opening_hours.exclude(weekday=OpeningHours.Weekday.MONDAY).delete()
+            OpeningHours.objects.bulk_create(new_rows)
+            revalidation.request_revalidation(revalidation.paths_for_venue(venue))
         updated += 1
 
     if updated:
@@ -118,7 +145,7 @@ class VenueAdmin(admin.ModelAdmin):
     search_fields = ("name", "neighborhood")
     prepopulated_fields = {"slug": ("name",)}
     inlines = [OpeningHoursInline, VenuePhotoInline]
-    actions = [copy_monday_to_all_days]
+    actions = [copy_monday_to_all_days, refresh_live_site_pages]
     readonly_fields = ("google_maps_link",)
     fieldsets = (
         (None, {"fields": ("city", "name", "slug", "neighborhood", "venue_type")}),
