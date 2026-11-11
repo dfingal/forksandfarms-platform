@@ -1,4 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
+import { BRAND_NAME, LOGO_ICON } from "@/lib/brand";
 import { NAV_LINKS, INSTAGRAM_URL } from "@/lib/nav-links";
 import InstagramIcon from "./InstagramIcon";
 import MobileNav from "./MobileNav";
@@ -8,8 +10,24 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-30 border-b border-forest/10 bg-cream">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
-        <Link href="/" className="text-lg font-semibold tracking-tight text-forest">
-          Forks And Farms
+        {/* Logo + name are one link. The image's alt is empty because the
+            visible name already labels the link — otherwise screen readers
+            would read "Forks And Farms" twice. */}
+        <Link
+          href="/"
+          className="flex items-center gap-2 text-lg font-semibold tracking-tight text-forest"
+        >
+          <Image
+            src={LOGO_ICON}
+            alt=""
+            // 36px on mobile, 44px from md up (where the hamburger
+            // gives way to the full nav). sizes lets the browser pick a
+            // sharp enough file for 2x/3x screens.
+            sizes="(min-width: 768px) 44px, 36px"
+            className="h-9 w-9 shrink-0 object-contain md:h-11 md:w-11"
+            preload
+          />
+          {BRAND_NAME}
         </Link>
 
         <nav aria-label="Primary" className="hidden items-center gap-6 md:flex">

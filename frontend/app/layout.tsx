@@ -1,9 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { DEFAULT_SHARE_IMAGE, getSiteUrl, SITE_NAME } from "@/lib/seo";
+import { BRAND_COLORS } from "@/lib/brand";
 
 // Placeholder typeface choices (CLAUDE.md: mark with TODO where final
 // decisions aren't made yet) — swap for the brand's chosen fonts later.
@@ -29,6 +30,11 @@ export const metadata: Metadata = {
   // venue pages do, via lib/seo.ts).
   openGraph: { siteName: SITE_NAME, type: "website", images: [DEFAULT_SHARE_IMAGE] },
   twitter: { card: "summary_large_image", images: [DEFAULT_SHARE_IMAGE.url] },
+};
+
+// Tints the browser UI (e.g. the mobile address bar) in brand green.
+export const viewport: Viewport = {
+  themeColor: BRAND_COLORS.forest,
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
