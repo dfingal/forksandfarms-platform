@@ -15,7 +15,10 @@ export default function Header() {
             would read "Forks And Farms" twice. */}
         <Link
           href="/"
-          className="flex items-center gap-2 text-lg font-semibold tracking-tight text-forest"
+          // text-xl (1.25rem) on mobile so name + logo + hamburger fit on
+          // one line at 375px; text-2xl (1.5rem) from md up. nowrap keeps
+          // the name on one line rather than wrapping under the logo.
+          className="flex items-center gap-2 whitespace-nowrap text-xl font-semibold tracking-tight text-forest md:text-2xl"
         >
           <Image
             src={LOGO_ICON}
