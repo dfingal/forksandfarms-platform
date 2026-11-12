@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { BRAND_NAME, LOGO_ICON } from "@/lib/brand";
+import { BRAND_NAME, LOGO_ICON_DETAILED } from "@/lib/brand";
 import { NAV_LINKS, INSTAGRAM_URL } from "@/lib/nav-links";
 import InstagramIcon from "./InstagramIcon";
 import MobileNav from "./MobileNav";
@@ -21,13 +21,14 @@ export default function Header() {
           className="flex items-center gap-2 whitespace-nowrap text-xl font-semibold tracking-tight text-forest md:text-2xl"
         >
           <Image
-            src={LOGO_ICON}
+            src={LOGO_ICON_DETAILED}
             alt=""
-            // 36px on mobile, 44px from md up (where the hamburger
-            // gives way to the full nav). sizes lets the browser pick a
-            // sharp enough file for 2x/3x screens.
-            sizes="(min-width: 768px) 44px, 36px"
-            className="h-9 w-9 shrink-0 object-contain md:h-11 md:w-11"
+            // 29px on mobile, 35px from md up (where the hamburger gives
+            // way to the full nav). Not on Tailwind's spacing scale, hence
+            // the [..px] values. sizes lets the browser pick a sharp
+            // enough file for 2x/3x screens.
+            sizes="(min-width: 768px) 35px, 29px"
+            className="h-[29px] w-[29px] shrink-0 object-contain md:h-[35px] md:w-[35px]"
             preload
           />
           {BRAND_NAME}

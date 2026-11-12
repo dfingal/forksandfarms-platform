@@ -3,6 +3,7 @@
  * tokens). Keep the hex values in sync with app/globals.css.
  */
 
+import logoIconDetailed from "@/public/brand/fnf-logo-icons/logo-icon-144.png";
 import logoIcon from "@/public/brand/fnf-logo-small-icons/logo-icon-small-144.png";
 
 export const BRAND_NAME = "Forks And Farms";
@@ -12,13 +13,16 @@ export const BRAND_COLORS = {
   cream: "#f6f1e7", // = --color-cream in app/globals.css
 } as const;
 
-/**
- * The simplified round badge, for every small use (header, footer).
- * The 144px source keeps it sharp on 3× screens at the 32-44px sizes we
- * show it; next/image serves it as WebP to browsers that support it,
- * falling back to this PNG.
+/*
+ * Two versions of the round badge. Both use 144px sources, which stay
+ * sharp on 3× screens at the sizes we show them; next/image serves them
+ * as WebP to browsers that support it, falling back to the PNG.
  *
- * The detailed badge in public/brand/fnf-logo-icons/ is kept for future
- * large uses only — its fine detail turns to mush at small sizes.
+ * - LOGO_ICON: the simplified badge — footer (32px). The browser icons
+ *   and manifest icons use the same simplified artwork (app/ and
+ *   public/brand/fnf-logo-small-icons/).
+ * - LOGO_ICON_DETAILED: the detailed badge — header nav bar only
+ *   (29px mobile / 35px desktop).
  */
 export const LOGO_ICON = logoIcon;
+export const LOGO_ICON_DETAILED = logoIconDetailed;
