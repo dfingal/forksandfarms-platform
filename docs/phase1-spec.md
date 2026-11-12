@@ -246,8 +246,8 @@ Notes:
 - Follow the Phase I wireframes in `docs/wireframes/`.
 - Brand palette: defined as Tailwind theme tokens in `frontend/app/globals.css` so they can be swapped in one place (contrast ratios are noted there). The "Laurel" scheme is described in `docs/color-refresh-brief.md`.
   - **Forest `#365540`** (final; the logo's green) is used for text, headings and buttons.
-  - **Laurel `#b8c7ae`** is the page background, including the footer and the gap around the floating header bar.
-  - **Nav Scrolled `#dce3d6`** is the floating header bar once the page is scrolled more than 20px. At the top of the page the bar is cream.
+  - **Laurel `#c6d2be`** is the page background, including the footer and the gap around the floating header bar (lg and up).
+  - **Nav Scrolled `#e0e6db`** is the floating header bar (lg and up) once the page is scrolled more than 20px. At the top of the page the bar is cream; below lg the header is a regular full-width cream bar.
   - **Cream `#f7f6f0`** (warm off-white) is used for cards and for button labels.
   - **Sage `#9dc183`** is a single accent surface per page (the partner callout) and carries large text only.
   - **Muted `#526b59`** is for secondary text on cream cards only.

@@ -16,22 +16,22 @@
    *
    * Contrast (WCAG AA: 4.5:1 for normal text; 3:1 for large text, i.e.
    * ≥24px, or ≥18.66px bold):
-   * - forest: 4.67 on laurel, 7.67 on cream, 4.11 on sage (large text only)
-   * - muted: 5.38 on cream, 3.28 on laurel (so muted goes on cream cards only)
-   * - terracotta: 4.95 on laurel, 8.12 on cream
+   * - forest: 5.28 on laurel, 7.67 on cream, 4.11 on sage (large text only)
+   * - muted: 5.38 on cream, 3.71 on laurel (so muted goes on cream cards only)
+   * - terracotta: 5.61 on laurel, 8.12 on cream
    * Faded forest text (text-forest/70 etc.) fails on laurel, and mostly
    * on cream too. Use text-forest or text-muted instead.
    */
   --color-forest: #365540; /* logo green: text, headings, buttons */
-  --color-laurel: #b8c7ae; /* page canvas: body, header, footer, sections */
+  --color-laurel: #c6d2be; /* page canvas: body, footer, sections */
   --color-cream: #f7f6f0; /* warm off-white: cards, button labels */
   --color-sage: #9dc183; /* accent surface: one per page, large text only */
-  /* Floating header bar once scrolled >20px (cream at the top of the page).
-     Forest on it is 6.32:1, terracotta hover/focus ring is 6.71:1. */
-  --color-nav-scrolled: #dce3d6;
+  /* Floating header bar (lg+) once scrolled >20px; cream at the top.
+     Forest on it is 6.53:1, terracotta hover/focus ring is 6.93:1. */
+  --color-nav-scrolled: #e0e6db;
   --color-muted: #526b59; /* secondary text, on cream cards only */
-  /* Darkened from the placeholder #c1622c (2.34:1 on laurel) so links,
-     error messages and the focus ring stay readable.
+  /* Darkened from the placeholder #c1622c (which fails AA on laurel) so
+     links, error messages and the focus ring stay readable.
      TODO(brand): replace with final terracotta. */
   --color-terracotta: #743b1b;
 }

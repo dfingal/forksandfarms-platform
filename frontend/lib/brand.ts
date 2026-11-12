@@ -10,7 +10,7 @@ export const BRAND_NAME = "Forks And Farms";
 
 export const BRAND_COLORS = {
   forest: "#365540", // = --color-forest in app/globals.css (the logo's green)
-  laurel: "#b8c7ae", // = --color-laurel in app/globals.css (page background)
+  laurel: "#c6d2be", // = --color-laurel in app/globals.css (page background)
 } as const;
 
 /*

@@ -24,14 +24,17 @@ function getServerSnapshot(): boolean {
 }
 
 /**
- * The floating, rounded header bar. Only this wrapper is a client
- * component; the logo and links inside it stay server-rendered (passed
- * in as children from Header.tsx).
+ * The header's inner row. Only this wrapper is a client component; the
+ * logo and links inside it stay server-rendered (passed in as children
+ * from Header.tsx).
  *
- * It exposes its state as data-scrolled, so children (the mobile menu
- * panel) can match its colour with `group-data-[scrolled=true]/navbar:`.
- * The colour change animates over 200ms, except for visitors who ask
- * for reduced motion, who get an instant switch.
+ * Below lg (1024px) it's just the content-width row inside the regular
+ * full-width cream header — no scroll effect. From lg up (every lg:
+ * class below) it becomes the floating, rounded bar: up to 1440px wide
+ * (wider than the page content), cream at the top of the page, then
+ * nav-scrolled + a shadow once data-scrolled is true. The colour change
+ * animates over 200ms, except for visitors who ask for reduced motion,
+ * who get an instant switch.
  */
 export default function NavBar({ children }: { children: React.ReactNode }) {
   const scrolled = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
@@ -39,7 +42,7 @@ export default function NavBar({ children }: { children: React.ReactNode }) {
   return (
     <div
       data-scrolled={scrolled}
-      className="group/navbar pointer-events-auto relative mx-auto flex max-w-6xl items-center justify-between rounded-2xl bg-cream px-4 py-4 transition-[background-color,box-shadow] duration-200 motion-reduce:transition-none data-[scrolled=true]:bg-nav-scrolled data-[scrolled=true]:shadow-md sm:px-6"
+      className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6 lg:pointer-events-auto lg:max-w-[1440px] lg:rounded-2xl lg:bg-cream lg:transition-[background-color,box-shadow] lg:duration-200 lg:motion-reduce:transition-none lg:data-[scrolled=true]:bg-nav-scrolled lg:data-[scrolled=true]:shadow-md"
     >
       {children}
     </div>

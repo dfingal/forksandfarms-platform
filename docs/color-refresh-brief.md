@@ -26,17 +26,25 @@ introducing near-duplicate greens.
 \#A9BA9D on the body, app shell, and normal section backgrounds. Avoid
 stray cream strips or gaps.
 
-**Navbar (updated 2026-11-12):** The navbar is a floating, rounded bar
-inset from the top and side edges (smaller margins on mobile).
-- It's sticky, its max width matches the page container, and it sits
-  above the Google Map.
-- At the top of the page it's Warm Off-White \#F7F6F0. After about 20px
-  of scrolling it changes to Nav Scrolled \#DCE3D6 (token `nav-scrolled`)
-  with a subtle shadow. The change is a 200ms transition, or instant
-  under prefers-reduced-motion.
-- The opened mobile menu panel matches the bar's current colour.
-- Keep the existing logo, wordmark, links, icons and hamburger. Laurel
-  shows around the bar.
+**Navbar (updated 2026-11-12):** The header is sticky and sits above
+the Google Map. It keeps the existing logo, wordmark, links, icons and
+hamburger, and has two looks:
+- **lg (1024px) and up:** a floating, rounded bar inset from the top
+  and sides.
+  - Max width 1440px, centred, with 24px side margins on narrower
+    screens. It's wider than the page content, which keeps its own
+    width.
+  - At the top of the page it's Warm Off-White \#F7F6F0. After about
+    20px of scrolling it changes to Nav Scrolled \#E0E6DB (token
+    `nav-scrolled`) with a subtle shadow.
+  - The change is a 200ms transition, or instant under
+    prefers-reduced-motion.
+  - Laurel shows around the bar.
+- **Below 1024px:** a regular full-width sticky header, edge to edge,
+  with no rounded corners or side gaps.
+  - Warm Off-White \#F7F6F0 with a subtle bottom border, and no scroll
+    colour change.
+  - The mobile menu panel opens full width below it.
 
 **Footer:** Use Laurel Green for the default footer background; retain
 the existing logo, green wordmark, links, and icon styling. Keep subtle
@@ -110,4 +118,9 @@ website.
 - **Forest Green token:** keep the existing site token `#365540` (matches the logo). Do NOT add `#304F3B`; the two are near-duplicates (contrast 1.10:1).
 - **Contrast finding:** `#365540` on Laurel `#A9BA9D` is 4.03:1 and on Sage `#9DC183` is 4.11:1 — below WCAG AA (4.5:1) for normal-size text (passes only for large text ≥24px, or ≥18.66px bold). Muted Green `#526B59` on Laurel is 2.83:1 — only use it on off-white cards (5.38:1 there).
 - **Fix to apply (smallest adjustment, keeps one brand green):** lighten the page background slightly from `#A9BA9D` to `#B8C7AE` (brand green on it = 4.67:1). Sage accent surfaces must only carry large text, or use off-white text-free accents, unless contrast is otherwise met.
+- **Update (2026-11-12):** the page background is now `#C6D2BE`, a few shades lighter again, and the scrolled navbar is `#E0E6DB`. Re-verified:
+  - Brand green is 5.28:1 on the background and 6.53:1 on the scrolled navbar.
+  - Muted Green is 3.71:1 on the background, so it is still for off-white cards only (5.38:1 there).
+  - Terracotta `#743b1b` (links, errors, focus ring) is 5.61:1 on the background and 6.93:1 on the scrolled navbar.
+  - Off-white labels on the green buttons are 7.67:1, and 6.29:1 on hover.
 - Report any other accessibility adjustments in the summary.

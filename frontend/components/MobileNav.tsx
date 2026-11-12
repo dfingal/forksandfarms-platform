@@ -32,12 +32,12 @@ export default function MobileNav() {
       </button>
 
       {open && (
-        // Drops down just below the floating bar (NavBar is the positioned
-        // parent), same width and corners, and matches the bar's current
-        // colour via NavBar's data-scrolled.
+        // Only exists below md, where the header is the regular full-width
+        // one: the panel spans the full width just below it (the sticky
+        // <header> is the positioned parent).
         <div
           id="mobile-nav-panel"
-          className="absolute inset-x-0 top-full z-20 mt-2 flex flex-col gap-1 rounded-2xl bg-cream px-4 py-4 shadow-md transition-colors duration-200 motion-reduce:transition-none group-data-[scrolled=true]/navbar:bg-nav-scrolled"
+          className="absolute inset-x-0 top-full z-20 flex flex-col gap-1 border-t border-forest/10 bg-cream px-4 py-4 shadow-sm"
         >
           {NAV_LINKS.map((link) => (
             <Link
