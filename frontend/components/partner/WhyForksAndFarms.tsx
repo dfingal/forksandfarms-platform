@@ -6,7 +6,7 @@ export default function WhyForksAndFarms() {
       <div
         role="img"
         aria-label="Forks And Farms at work (placeholder)"
-        className="order-last flex aspect-[4/3] items-center justify-center rounded-lg border border-forest/10 bg-forest/5 text-sm text-forest/50 lg:order-first"
+        className="order-last flex aspect-[4/3] items-center justify-center rounded-lg border border-forest/10 bg-cream text-sm text-muted lg:order-first"
       >
         Photo coming soon
       </div>
@@ -14,7 +14,7 @@ export default function WhyForksAndFarms() {
       <div>
         <h2 className="text-forest">Why Forks And Farms</h2>
         {/* TODO(copy): 2-3 sentence mission/story */}
-        <p className="mt-2 text-forest/80">
+        <p className="mt-2 text-forest">
           We started Forks And Farms because the places we love in St. Louis deserved more
           life in them. We handpick, deliver, and maintain plants in local coffee shops, wine
           bars, and restaurants — so owners get the look without the upkeep, and customers get

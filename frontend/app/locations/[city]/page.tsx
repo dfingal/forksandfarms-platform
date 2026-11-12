@@ -47,7 +47,7 @@ export default async function CityLocationsPage({ params }: PageProps) {
     <div>
       <div className="mx-auto max-w-6xl px-4 py-7 sm:px-6">
         <h1 className="text-forest">Forks And Farms in {city.name}</h1>
-        {city.intro && <p className="mt-2 max-w-xl text-forest/80">{city.intro}</p>}
+        {city.intro && <p className="mt-2 max-w-xl text-forest">{city.intro}</p>}
 
         <div className="mt-6">
           <VenueCardGrid venues={city.venues} />

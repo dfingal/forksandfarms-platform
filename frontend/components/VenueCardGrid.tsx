@@ -5,7 +5,7 @@ import VenueCard from "./VenueCard";
 // compact rows on mobile (handled inside VenueCard itself).
 export default function VenueCardGrid({ venues }: { venues: VenueCardData[] }) {
   if (venues.length === 0) {
-    return <p className="text-forest/70">No locations here yet — check back soon.</p>;
+    return <p className="text-forest">No locations here yet — check back soon.</p>;
   }
 
   return (

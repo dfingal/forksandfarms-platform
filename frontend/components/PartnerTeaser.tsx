@@ -18,13 +18,13 @@ const OPTIONS = [
 
 export default function PartnerTeaser() {
   return (
-    <section className="bg-forest/5">
+    <section>
       <div className="mx-auto max-w-6xl px-4 py-7 sm:px-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <h2 className="text-forest">Put plants to work in your space.</h2>
             {/* TODO(copy) */}
-            <p className="mt-2 max-w-md text-sm text-forest/70">
+            <p className="mt-2 max-w-md text-sm text-forest">
               Three plans, all the perks: revenue from décor, no plant-care burden, and
               customers who love being around plants.
             </p>
@@ -39,9 +39,9 @@ export default function PartnerTeaser() {
 
         <div className="mt-4 grid gap-4 sm:grid-cols-3">
           {OPTIONS.map((option) => (
-            <div key={option.title} className="rounded-lg border border-forest/10 bg-white p-4">
+            <div key={option.title} className="rounded-lg border border-forest/10 bg-cream p-4">
               <h3 className="text-forest">{option.title}</h3>
-              <p className="mt-1 text-sm text-forest/70">{option.body}</p>
+              <p className="mt-1 text-sm text-muted">{option.body}</p>
             </div>
           ))}
         </div>

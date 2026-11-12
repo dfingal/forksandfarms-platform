@@ -23,7 +23,7 @@ export default function VenueCard({
   return (
     <Link
       href={`/locations/${venue.city}/${venue.slug}`}
-      className="group flex items-center gap-3 rounded-lg border border-forest/10 bg-white p-3 sm:flex-col sm:items-stretch sm:gap-0 sm:overflow-hidden sm:p-0"
+      className="group flex items-center gap-3 rounded-lg border border-forest/10 bg-cream p-3 sm:flex-col sm:items-stretch sm:gap-0 sm:overflow-hidden sm:p-0"
     >
       <div
         aria-hidden="true"
@@ -36,9 +36,9 @@ export default function VenueCard({
       />
       <div className="min-w-0 flex-1 sm:p-4">
         <p className="truncate font-semibold text-forest">{venue.name}</p>
-        <p className="truncate text-sm text-forest/70">{venue.neighborhood}</p>
+        <p className="truncate text-sm text-muted">{venue.neighborhood}</p>
         {showDescription && venue.short_description && (
-          <p className="mt-1 line-clamp-2 text-sm text-forest/70">{venue.short_description}</p>
+          <p className="mt-1 line-clamp-2 text-sm text-muted">{venue.short_description}</p>
         )}
         <div className="mt-1 flex items-center gap-2 sm:mt-2">
           <span className="rounded bg-forest/10 px-2 py-0.5 text-xs text-forest">

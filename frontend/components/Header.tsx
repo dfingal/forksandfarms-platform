@@ -4,12 +4,25 @@ import { BRAND_NAME, LOGO_ICON_DETAILED } from "@/lib/brand";
 import { NAV_LINKS, INSTAGRAM_URL } from "@/lib/nav-links";
 import InstagramIcon from "./InstagramIcon";
 import MobileNav from "./MobileNav";
+import NavBar from "./NavBar";
 
-// Server component — only MobileNav below needs client-side state.
+// Server component — only NavBar (scroll colour) and MobileNav (menu
+// toggle) below need client-side state.
+//
+// Two looks, switching at lg (1024px):
+// - Below lg: a regular full-width sticky header, cream with a subtle
+//   bottom border, edge to edge.
+// - lg and up: a floating, rounded bar (styled in NavBar) with a 24px
+//   side gap and a 12px top gap. Here the <header> is a
+//   transparent sticky strip that provides the gap; it ignores clicks
+//   (pointer-events-none) so the gap doesn't block the page underneath,
+//   and the bar turns clicks back on.
+// Either way it stays in normal flow, so page content starts below it
+// rather than hiding under it. z-40 keeps it above the Google Map.
 export default function Header() {
   return (
-    <header className="sticky top-0 z-30 border-b border-forest/10 bg-cream">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
+    <header className="sticky top-0 z-40 border-b border-forest/10 bg-cream lg:pointer-events-none lg:border-b-0 lg:bg-transparent lg:px-6 lg:pt-3">
+      <NavBar>
         {/* Logo + name are one link. The image's alt is empty because the
             visible name already labels the link — otherwise screen readers
             would read "Forks And Farms" twice. */}
@@ -56,7 +69,7 @@ export default function Header() {
         </nav>
 
         <MobileNav />
-      </div>
+      </NavBar>
     </header>
   );
 }

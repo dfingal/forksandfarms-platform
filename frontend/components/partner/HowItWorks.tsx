@@ -15,7 +15,7 @@ export default function HowItWorks() {
           <div key={step.number}>
             <p className="text-sm font-semibold text-terracotta">{step.number}</p>
             <h3 className="mt-1 text-forest">{step.title}</h3>
-            <p className="mt-1 text-sm text-forest/70">{step.body}</p>
+            <p className="mt-1 text-sm text-forest">{step.body}</p>
           </div>
         ))}
       </div>

@@ -32,6 +32,9 @@ export default function MobileNav() {
       </button>
 
       {open && (
+        // Only exists below md, where the header is the regular full-width
+        // one: the panel spans the full width just below it (the sticky
+        // <header> is the positioned parent).
         <div
           id="mobile-nav-panel"
           className="absolute inset-x-0 top-full z-20 flex flex-col gap-1 border-t border-forest/10 bg-cream px-4 py-4 shadow-sm"

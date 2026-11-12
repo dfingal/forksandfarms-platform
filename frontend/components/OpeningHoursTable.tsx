@@ -15,7 +15,7 @@ interface OpeningHoursTableProps {
 // row is today" bolding is deferred to TodayWeekdayStyle (client).
 export default function OpeningHoursTable({ days, timezone }: OpeningHoursTableProps) {
   if (!hasAnySetHours(days)) {
-    return <p className="text-sm text-forest/60">Hours coming soon.</p>;
+    return <p className="text-sm text-forest">Hours coming soon.</p>;
   }
 
   return (
@@ -24,7 +24,7 @@ export default function OpeningHoursTable({ days, timezone }: OpeningHoursTableP
       <table className="w-full text-sm">
         <tbody>
           {(days ?? []).map((day, i) => (
-            <tr key={day.day} data-weekday={i} className="text-forest/80">
+            <tr key={day.day} data-weekday={i} className="text-forest">
               <td className="w-28 py-0.5 pr-4">{day.day}</td>
               <td className="py-0.5">
                 {day.is_closed

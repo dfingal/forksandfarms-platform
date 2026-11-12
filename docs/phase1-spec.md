@@ -244,7 +244,14 @@ Notes:
 ## 8. Design
 
 - Follow the Phase I wireframes in `docs/wireframes/`.
-- Brand palette: forest green, cream, terracotta, defined as Tailwind theme tokens in `frontend/app/globals.css` so they can be swapped in one place. **Forest is final: `#365540`** (the logo's green; 7.37:1 on cream, WCAG AA). Cream and terracotta are still placeholders.
+- Brand palette: defined as Tailwind theme tokens in `frontend/app/globals.css` so they can be swapped in one place (contrast ratios are noted there). The "Laurel" scheme is described in `docs/color-refresh-brief.md`.
+  - **Forest `#365540`** (final; the logo's green) is used for text, headings and buttons.
+  - **Laurel `#c6d2be`** is the page background, including the footer and the gap around the floating header bar (lg and up).
+  - **Nav Scrolled `#e0e6db`** is the floating header bar (lg and up) once the page is scrolled more than 20px. At the top of the page the bar is cream; below lg the header is a regular full-width cream bar.
+  - **Cream `#f7f6f0`** (warm off-white) is used for cards and for button labels.
+  - **Sage `#9dc183`** is a single accent surface per page (the partner callout) and carries large text only.
+  - **Muted `#526b59`** is for secondary text on cream cards only.
+  - **Terracotta `#743b1b`** is for links, errors and the focus ring. It's still a placeholder, darkened for contrast on laurel.
 - Logo: two versions of the round badge in `frontend/public/brand/`.
   - `fnf-logo-small-icons/` (simplified) is used for **every small use**: the header (36px mobile / 44px desktop), the footer (32px), the browser icons and the manifest icons.
   - `fnf-logo-icons/` (detailed) is kept for future large uses only.

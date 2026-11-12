@@ -20,7 +20,7 @@ export default async function PartnerProof() {
 
   return (
     <section className="mx-auto max-w-6xl px-4 py-7 sm:px-6">
-      <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-forest/60">
+      <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-forest">
         Trusted by local venues
       </h2>
 
@@ -31,7 +31,7 @@ export default async function PartnerProof() {
           ))}
         </div>
       ) : (
-        <p className="text-sm text-forest/70">
+        <p className="text-sm text-forest">
           We&rsquo;re just getting started — check back soon for our partner venues.
         </p>
       )}
@@ -39,7 +39,7 @@ export default async function PartnerProof() {
       {TESTIMONIALS.length > 0 && (
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
           {TESTIMONIALS.map((t) => (
-            <figure key={t.name} className="rounded-lg border border-forest/10 bg-white p-4">
+            <figure key={t.name} className="rounded-lg border border-forest/10 bg-cream p-4">
               <blockquote className="text-forest/80">&ldquo;{t.quote}&rdquo;</blockquote>
               <figcaption className="mt-2 text-sm font-medium text-forest">
                 {t.name}, {t.venue}
@@ -50,7 +50,7 @@ export default async function PartnerProof() {
       )}
 
       {/* TODO(copy): optional stat line, e.g. "X venues · Y plants placed" */}
-      <p className="mt-4 text-sm text-forest/60">TODO(copy): a stat worth bragging about.</p>
+      <p className="mt-4 text-sm text-forest">TODO(copy): a stat worth bragging about.</p>
     </section>
   );
 }
