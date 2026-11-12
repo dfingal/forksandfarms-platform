@@ -7,7 +7,7 @@ export default function LocationsNotFound() {
   return (
     <div className="mx-auto max-w-xl px-4 py-16 text-center sm:px-6">
       <h1 className="text-forest">We couldn&rsquo;t find that location.</h1>
-      <p className="mt-3 text-forest/70">
+      <p className="mt-3 text-forest">
         It may have moved, closed, or the link might be out of date.
       </p>
       <Link

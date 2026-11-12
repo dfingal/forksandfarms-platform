@@ -12,7 +12,7 @@ export default function manifest(): MetadataRoute.Manifest {
     start_url: "/",
     display: "browser",
     theme_color: BRAND_COLORS.forest,
-    background_color: BRAND_COLORS.cream,
+    background_color: BRAND_COLORS.laurel,
     icons: [
       // purpose "any" only — not "maskable": the logo is a full circle,
       // so Android's mask would crop its edges.

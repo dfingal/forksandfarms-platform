@@ -109,7 +109,7 @@ export default async function VenuePage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
       <div className="mx-auto max-w-6xl px-4 py-5 sm:px-6">
-        <Link href={`/locations/${citySlug}`} className="text-sm text-forest/70 hover:text-forest">
+        <Link href={`/locations/${citySlug}`} className="text-sm text-forest hover:text-terracotta">
           ← All {cityName} locations
         </Link>
       </div>
@@ -120,7 +120,7 @@ export default async function VenuePage({ params }: PageProps) {
           aria-hidden={!venue.hero_image}
           role={venue.hero_image ? "img" : undefined}
           aria-label={venue.hero_image ? `${venue.name} hero photo` : undefined}
-          className="aspect-[16/9] rounded-lg bg-forest/10 sm:aspect-[21/9]"
+          className="aspect-[16/9] rounded-lg bg-cream sm:aspect-[21/9]"
           style={
             venue.hero_image
               ? { backgroundImage: `url(${venue.hero_image})`, backgroundSize: "cover", backgroundPosition: "center" }
@@ -128,7 +128,7 @@ export default async function VenuePage({ params }: PageProps) {
           }
         >
           {!venue.hero_image && (
-            <div className="flex h-full items-center justify-center text-sm text-forest/50">
+            <div className="flex h-full items-center justify-center text-sm text-muted">
               Photo coming soon
             </div>
           )}
@@ -136,11 +136,11 @@ export default async function VenuePage({ params }: PageProps) {
 
         <div className="mt-4 flex flex-wrap items-center gap-3">
           <h1 className="text-forest">{venue.name}</h1>
-          <span className="rounded bg-forest/10 px-2 py-0.5 text-xs text-forest">
+          <span className="rounded bg-cream px-2 py-0.5 text-xs text-forest">
             {VENUE_STATUS_LABELS[venue.status]}
           </span>
         </div>
-        <p className="text-forest/70">{venue.neighborhood}</p>
+        <p className="text-forest">{venue.neighborhood}</p>
       </div>
 
       {/* Info block */}
@@ -148,7 +148,7 @@ export default async function VenuePage({ params }: PageProps) {
         <div className="space-y-4">
           <div>
             <h3 className="text-forest">Address</h3>
-            <p className="text-sm text-forest/70">
+            <p className="text-sm text-forest">
               {addressLines.map((line) => (
                 <span key={line} className="block">
                   {line}
@@ -202,7 +202,7 @@ export default async function VenuePage({ params }: PageProps) {
       {/* Plant setup */}
       <div className="mx-auto mt-7 max-w-6xl px-4 sm:px-6">
         <h2 className="text-forest">The plant setup at {venue.name}</h2>
-        <p className="mt-2 max-w-2xl text-forest/80">{venue.setup_description}</p>
+        <p className="mt-2 max-w-2xl text-forest">{venue.setup_description}</p>
 
         {venue.photos.length > 0 ? (
           <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
@@ -217,7 +217,7 @@ export default async function VenuePage({ params }: PageProps) {
             ))}
           </div>
         ) : (
-          <div className="mt-4 flex aspect-[16/9] max-w-md items-center justify-center rounded bg-forest/10 text-sm text-forest/50">
+          <div className="mt-4 flex aspect-[16/9] max-w-md items-center justify-center rounded bg-cream text-sm text-muted">
             Photos coming soon
           </div>
         )}

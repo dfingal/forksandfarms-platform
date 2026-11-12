@@ -69,8 +69,8 @@ function MapPlaceholder({ city, venues }: VenueMapProps) {
   // No API key, no load, or a runtime script error: a styled fallback
   // instead of a broken/blank map (never crash the page over this).
   return (
-    <div className="flex h-80 flex-col items-center justify-center gap-3 rounded-lg border border-forest/10 bg-forest/5 p-6 text-center sm:h-96">
-      <p className="text-sm text-forest/70">
+    <div className="flex h-80 flex-col items-center justify-center gap-3 rounded-lg border border-forest/10 p-6 text-center sm:h-96">
+      <p className="text-sm text-forest">
         Map unavailable right now — here are our {city.name} locations:
       </p>
       <ul className="flex flex-wrap justify-center gap-2">
@@ -175,8 +175,8 @@ export default function VenueMap({ city, venues }: VenueMapProps) {
             />
             <div className="min-w-0 flex-1">
               <p className="truncate font-semibold text-forest">{selected.name}</p>
-              <p className="truncate text-sm text-forest/70">{selected.neighborhood}</p>
-              <p className="text-xs text-forest/60">{VENUE_STATUS_LABELS[selected.status]}</p>
+              <p className="truncate text-sm text-muted">{selected.neighborhood}</p>
+              <p className="text-xs text-muted">{VENUE_STATUS_LABELS[selected.status]}</p>
               <Link
                 href={`/locations/${selected.city}/${selected.slug}`}
                 className="mt-1 inline-block text-sm font-medium text-terracotta hover:underline"
@@ -188,7 +188,7 @@ export default function VenueMap({ city, venues }: VenueMapProps) {
               type="button"
               aria-label="Close"
               onClick={() => setSelected(null)}
-              className="h-6 w-6 shrink-0 text-forest/50 hover:text-forest"
+              className="h-6 w-6 shrink-0 text-muted hover:text-forest"
             >
               ×
             </button>

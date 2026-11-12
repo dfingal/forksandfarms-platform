@@ -5,7 +5,7 @@ import { NAV_LINKS, INSTAGRAM_URL, CONTACT_EMAIL } from "@/lib/nav-links";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-forest/10 bg-cream">
+    <footer className="border-t border-forest/10 bg-background">
       <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-6 text-sm text-forest sm:flex-row sm:items-center sm:justify-between sm:px-6">
         <span className="flex items-center gap-2 font-semibold tracking-tight">
           {/* Decorative: the name right next to it says the same thing. */}

@@ -10,7 +10,7 @@ export default function Hero() {
             orphaned alone on its own line at narrow widths. */}
         <h1 className="text-forest">Plants in the places you already&nbsp;go.</h1>
         {/* TODO(copy): real one-line explanation */}
-        <p className="mt-3 max-w-md text-forest/80">
+        <p className="mt-3 max-w-md text-forest">
           We place curated plants in St. Louis coffee shops, wine bars, restaurants, and
           breweries. Buy what you see — we handle the care.
         </p>
@@ -24,7 +24,7 @@ export default function Hero() {
           </a>
           <Link
             href="/partner"
-            className="rounded border border-forest px-5 py-2.5 text-sm font-semibold text-forest hover:bg-forest/5"
+            className="rounded border border-forest px-5 py-2.5 text-sm font-semibold text-forest hover:bg-cream"
           >
             Partner With Us
           </Link>
@@ -35,7 +35,7 @@ export default function Hero() {
       <div
         role="img"
         aria-label="Plants on display at a Forks And Farms partner venue (placeholder)"
-        className="flex aspect-[4/3] items-center justify-center rounded-lg border border-forest/10 bg-forest/5 text-sm text-forest/50"
+        className="flex aspect-[4/3] items-center justify-center rounded-lg border border-forest/10 bg-cream text-sm text-muted"
       >
         Hero photo coming soon
       </div>

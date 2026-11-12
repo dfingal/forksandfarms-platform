@@ -24,7 +24,7 @@ export default function VenueCards({ city }: { city: CityDetail }) {
         <div className="mt-4 text-center">
           <Link
             href={`/locations/${city.slug}`}
-            className="inline-block rounded border border-forest px-5 py-2.5 text-sm font-semibold text-forest hover:bg-forest/5"
+            className="inline-block rounded border border-forest px-5 py-2.5 text-sm font-semibold text-forest hover:bg-cream"
           >
             See all {city.name} locations →
           </Link>

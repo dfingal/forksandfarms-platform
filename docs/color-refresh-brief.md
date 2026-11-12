@@ -1,0 +1,101 @@
+# Goal
+
+Refresh the existing website using Laurel Green as the primary page
+background, while preserving the current forest-green typography and
+brand identity. Use Sage Green sparingly as an accent and warm off-white
+for cards. This is a color-only update, not a redesign.
+
+# Approved palette
+
+| Role                                 | Color          | Value                          |
+|--------------------------------------|----------------|--------------------------------|
+| Primary page background              | Laurel Green   | \#A9BA9D                       |
+| Primary text, logo, headings         | Forest Green   | \#304F3B                       |
+| Card and content surfaces            | Warm Off-White | \#F7F6F0                       |
+| Accent / featured card               | Sage Green     | \#9DC183                       |
+| Secondary text (on light cards only) | Muted Green    | \#526B59                       |
+| Borders / separators                 | Tonal Green    | Choose accessible subtle shade |
+
+Color values are starting tokens. Preserve the current forest green if
+the codebase already defines an authoritative brand token; avoid
+introducing near-duplicate greens.
+
+# Implementation instructions
+
+**Global canvas:** Replace the existing cream page background with
+\#A9BA9D on the body, app shell, and normal section backgrounds. Avoid
+stray cream strips or gaps.
+
+**Navbar and footer:** Use Laurel Green for the navbar and default
+footer background; retain the existing logo, green wordmark, links, and
+icon styling. Keep subtle separators where needed.
+
+**Hero:** Keep the existing copy, imagery, spacing, typography, and CTA
+layout. Set the hero surface to Laurel Green; keep headings and primary
+body copy in Forest Green.
+
+**Cards:** Use \#F7F6F0 for standard cards, including “What We Do,”
+venue cards, and partner-service cards. Keep existing radius, shadows,
+dimensions, and spacing.
+
+**Accent treatment:** Use \#9DC183 selectively for one featured card,
+callout, or accent surface at a time. Do not turn every card green.
+Retain existing primary dark-green buttons.
+
+**Map and venue listings:** Do not change map tiles, markers, map
+behavior, photos, or venue data. Update only surrounding section
+surfaces and card backgrounds.
+
+**Text and contrast:** Forest Green \#304F3B should be the default text
+on Laurel and Sage surfaces. Muted secondary text should be tested and
+darkened if needed. Keep white/off-white button labels on dark-green
+buttons.
+
+**Responsive states:** Apply the same palette on mobile and desktop.
+Verify navigation menus, focus states, hover states, badges, inputs, and
+sticky elements.
+
+# Technical constraints
+
+- Implement via existing CSS variables, theme tokens, or component theme
+  definitions; avoid scattered hardcoded replacements.
+
+- Do not change logos, font families, text case, copy, layout, spacing,
+  imagery, functionality, or component hierarchy.
+
+- Preserve semantic states (success, error, disabled) and verify WCAG AA
+  text contrast, including secondary text and interactive controls.
+
+- Keep changes scoped and easy to revert. Do not modify third-party map
+  styling or assets.
+
+# Acceptance checklist
+
+☐ Laurel Green is the dominant site background, including navbar and
+major page sections.
+
+☐ Forest Green remains the primary brand and text color.
+
+☐ Standard cards are warm off-white; Sage Green appears only as a
+deliberate accent.
+
+☐ No accidental cream gaps, low-contrast labels, or unreadable buttons.
+
+☐ Desktop and mobile layouts and all interactions are unchanged.
+
+☐ Provide a concise summary of files/tokens changed and screenshots of
+desktop/mobile for review.
+
+# Instruction to implementing AI
+
+Make only the color-scheme changes specified above. If a component
+requires an additional color for accessibility, choose the smallest
+necessary adjustment and report it. Do not independently redesign the
+website.
+
+# Addendum (decisions after contrast check — 2026-11-12)
+
+- **Forest Green token:** keep the existing site token `#365540` (matches the logo). Do NOT add `#304F3B`; the two are near-duplicates (contrast 1.10:1).
+- **Contrast finding:** `#365540` on Laurel `#A9BA9D` is 4.03:1 and on Sage `#9DC183` is 4.11:1 — below WCAG AA (4.5:1) for normal-size text (passes only for large text ≥24px, or ≥18.66px bold). Muted Green `#526B59` on Laurel is 2.83:1 — only use it on off-white cards (5.38:1 there).
+- **Fix to apply (smallest adjustment, keeps one brand green):** lighten the page background slightly from `#A9BA9D` to `#B8C7AE` (brand green on it = 4.67:1). Sage accent surfaces must only carry large text, or use off-white text-free accents, unless contrast is otherwise met.
+- Report any other accessibility adjustments in the summary.

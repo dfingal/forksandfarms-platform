@@ -29,7 +29,7 @@ export default function PartnershipOptions() {
       <h2 className="text-forest">Partnership options</h2>
       <div className="mt-4 grid gap-4 sm:grid-cols-3">
         {OPTIONS.map((option) => (
-          <div key={option.title} className="rounded-lg border border-forest/10 bg-white p-4">
+          <div key={option.title} className="rounded-lg border border-forest/10 bg-cream p-4">
             <div className="flex items-start justify-between gap-2">
               <h3 className="text-forest">{option.title}</h3>
               {option.tag && (
@@ -38,8 +38,8 @@ export default function PartnershipOptions() {
                 </span>
               )}
             </div>
-            <p className="mt-1 text-sm text-forest/70">{option.body}</p>
-            <p className="mt-2 text-xs text-forest/60">{option.bestFor}</p>
+            <p className="mt-1 text-sm text-muted">{option.body}</p>
+            <p className="mt-2 text-xs text-muted">{option.bestFor}</p>
           </div>
         ))}
       </div>

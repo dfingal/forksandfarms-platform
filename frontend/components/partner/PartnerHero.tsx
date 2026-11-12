@@ -7,7 +7,7 @@ export default function PartnerHero() {
       <div>
         <h1 className="text-forest">Plants that pay their way.</h1>
         {/* TODO(copy): real one-line pitch */}
-        <p className="mt-3 max-w-md text-forest/80">
+        <p className="mt-3 max-w-md text-forest">
           Turn your space into somewhere people want to linger — we supply, style, and care
           for the plants, you keep a share of what sells.
         </p>
@@ -26,7 +26,7 @@ export default function PartnerHero() {
       <div
         role="img"
         aria-label="Plants on display at a Forks And Farms partner venue (placeholder)"
-        className="flex aspect-[4/3] items-center justify-center rounded-lg border border-forest/10 bg-forest/5 text-sm text-forest/50"
+        className="flex aspect-[4/3] items-center justify-center rounded-lg border border-forest/10 bg-cream text-sm text-muted"
       >
         Photo coming soon
       </div>

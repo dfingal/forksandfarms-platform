@@ -3,28 +3,44 @@
 :root {
   /* Fixed brand palette — the site does not follow the OS/browser dark
      mode preference (there is deliberately no prefers-color-scheme
-     override here); it always renders cream background / forest text. */
-  --background: var(--color-cream);
+     override here); it always renders laurel background / forest text. */
+  --background: var(--color-laurel);
   --foreground: var(--color-forest);
 
   /*
-   * Brand palette (spec §8). Forest is final (the logo's green); cream
-   * and terracotta are still PLACEHOLDERS (open item in
-   * docs/phase1-spec.md §14). Every component references the tokens
+   * Brand palette (spec §8; the "Laurel" refresh in
+   * docs/color-refresh-brief.md). Every component references the tokens
    * below, not raw hex, so a palette change is a one-line edit here —
-   * except lib/brand.ts, which repeats forest/cream for places CSS
-   * can't reach (the web manifest's theme color).
+   * except lib/brand.ts, which repeats some values for places CSS can't
+   * reach (the web manifest).
+   *
+   * Contrast (WCAG AA: 4.5:1 for normal text; 3:1 for large text, i.e.
+   * ≥24px, or ≥18.66px bold):
+   * - forest: 4.67 on laurel, 7.67 on cream, 4.11 on sage (large text only)
+   * - muted: 5.38 on cream, 3.28 on laurel (so muted goes on cream cards only)
+   * - terracotta: 4.95 on laurel, 8.12 on cream
+   * Faded forest text (text-forest/70 etc.) fails on laurel, and mostly
+   * on cream too. Use text-forest or text-muted instead.
    */
-  --color-forest: #365540; /* logo green; 7.37:1 on cream (WCAG AA) */
-  --color-cream: #f6f1e7; /* TODO(brand): replace with final cream */
-  --color-terracotta: #c1622c; /* TODO(brand): replace with final terracotta */
+  --color-forest: #365540; /* logo green: text, headings, buttons */
+  --color-laurel: #b8c7ae; /* page canvas: body, header, footer, sections */
+  --color-cream: #f7f6f0; /* warm off-white: cards, button labels */
+  --color-sage: #9dc183; /* accent surface: one per page, large text only */
+  --color-muted: #526b59; /* secondary text, on cream cards only */
+  /* Darkened from the placeholder #c1622c (2.34:1 on laurel) so links,
+     error messages and the focus ring stay readable.
+     TODO(brand): replace with final terracotta. */
+  --color-terracotta: #743b1b;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-forest: var(--color-forest);
+  --color-laurel: var(--color-laurel);
   --color-cream: var(--color-cream);
+  --color-sage: var(--color-sage);
+  --color-muted: var(--color-muted);
   --color-terracotta: var(--color-terracotta);
   --font-sans: var(--font-body);
   --font-mono: var(--font-geist-mono);
@@ -40,7 +56,7 @@ html {
   /* Without this, some browsers (Safari in particular) paint their own
      dark canvas behind the page in OS dark mode whenever content is
      shorter than the viewport — showing as a black band below the
-     footer even though body itself is cream. */
+     footer even though body itself is laurel. */
   color-scheme: light;
 }
 

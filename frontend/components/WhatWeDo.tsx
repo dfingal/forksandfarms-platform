@@ -17,14 +17,14 @@ const BLOCKS = [
 export default function WhatWeDo() {
   return (
     <section className="mx-auto max-w-6xl px-4 py-7 sm:px-6">
-      <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-forest/60">
+      <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-forest">
         What we do
       </h2>
       <div className="grid gap-4 sm:grid-cols-3">
         {BLOCKS.map((block) => (
-          <div key={block.title} className="rounded-lg border border-forest/10 bg-white p-4">
+          <div key={block.title} className="rounded-lg border border-forest/10 bg-cream p-4">
             <h3 className="text-forest">{block.title}</h3>
-            <p className="mt-2 text-sm text-forest/70">{block.body}</p>
+            <p className="mt-2 text-sm text-muted">{block.body}</p>
           </div>
         ))}
       </div>

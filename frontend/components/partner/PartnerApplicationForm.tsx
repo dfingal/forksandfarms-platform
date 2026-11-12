@@ -163,7 +163,7 @@ export default function PartnerApplicationForm() {
   return (
     <section id="apply" className="scroll-mt-24 mx-auto max-w-2xl px-4 py-7 sm:px-6">
       <h2 className="text-forest">Tell us about your venue</h2>
-      <p className="mt-2 text-sm text-forest/70">We&rsquo;ll reply to schedule a walkthrough.</p>
+      <p className="mt-2 text-sm text-forest">We&rsquo;ll reply to schedule a walkthrough.</p>
 
       <form noValidate onSubmit={handleSubmit} className="mt-6 space-y-5">
         {submitError && (
@@ -337,7 +337,7 @@ export default function PartnerApplicationForm() {
         </button>
       </form>
 
-      <p className="mt-4 text-sm text-forest/70">
+      <p className="mt-4 text-sm text-forest">
         Prefer to talk? Email{" "}
         <a href={`mailto:${CONTACT_EMAIL}`} className="font-medium text-terracotta hover:underline">
           {CONTACT_EMAIL}
@@ -350,7 +350,7 @@ export default function PartnerApplicationForm() {
 
 function inputClass(invalid: boolean) {
   return `w-full rounded border bg-white px-3 py-2 text-sm text-forest ${
-    invalid ? "border-terracotta" : "border-forest/20"
+    invalid ? "border-terracotta" : "border-forest"
   }`;
 }
 
