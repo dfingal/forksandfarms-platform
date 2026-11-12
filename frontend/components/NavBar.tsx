@@ -42,7 +42,7 @@ export default function NavBar({ children }: { children: React.ReactNode }) {
   return (
     <div
       data-scrolled={scrolled}
-      className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6 lg:pointer-events-auto lg:max-w-[1440px] lg:rounded-2xl lg:bg-cream lg:transition-[background-color,box-shadow] lg:duration-200 lg:motion-reduce:transition-none lg:data-[scrolled=true]:bg-nav-scrolled lg:data-[scrolled=true]:shadow-md"
+      className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6 lg:pointer-events-auto lg:max-w-[1440px] lg:rounded-3xl lg:bg-cream lg:transition-[background-color,box-shadow] lg:duration-200 lg:motion-reduce:transition-none lg:data-[scrolled=true]:bg-nav-scrolled lg:data-[scrolled=true]:shadow-md"
     >
       {children}
     </div>
