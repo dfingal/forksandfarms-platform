@@ -1,10 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { BRAND_NAME, LOGO_ICON_DETAILED } from "@/lib/brand";
+import { LOGO_ICON_DETAILED } from "@/lib/brand";
 import { NAV_LINKS, INSTAGRAM_URL } from "@/lib/nav-links";
 import InstagramIcon from "./InstagramIcon";
 import MobileNav from "./MobileNav";
 import NavBar from "./NavBar";
+import Wordmark from "./Wordmark";
 
 // Server component — only NavBar (scroll colour) and MobileNav (menu
 // toggle) below need client-side state.
@@ -28,10 +29,10 @@ export default function Header() {
             would read "Forks And Farms" twice. */}
         <Link
           href="/"
-          // text-xl (1.25rem) on mobile so name + logo + hamburger fit on
-          // one line at 375px; text-2xl (1.5rem) from md up. nowrap keeps
-          // the name on one line rather than wrapping under the logo.
-          className="flex items-center gap-2 whitespace-nowrap text-xl font-semibold tracking-tight text-forest md:text-2xl"
+          // Wordmark at 1.75rem with a 2.25rem line height (leading-9), so
+          // the bar's height barely changes. nowrap keeps the name on one
+          // line rather than wrapping under the logo.
+          className="flex items-center gap-2 whitespace-nowrap text-[1.75rem] leading-9 tracking-tight text-forest"
         >
           <Image
             src={LOGO_ICON_DETAILED}
@@ -44,7 +45,7 @@ export default function Header() {
             className="h-[29px] w-[29px] shrink-0 object-contain md:h-[35px] md:w-[35px]"
             preload
           />
-          {BRAND_NAME}
+          <Wordmark weight={500} />
         </Link>
 
         <nav aria-label="Primary" className="hidden items-center gap-6 md:flex">
