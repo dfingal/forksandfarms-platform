@@ -1,10 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { BRAND_NAME, LOGO_ICON_DETAILED } from "@/lib/brand";
+import { LOGO_ICON_DETAILED } from "@/lib/brand";
 import { NAV_LINKS, INSTAGRAM_URL } from "@/lib/nav-links";
 import InstagramIcon from "./InstagramIcon";
 import MobileNav from "./MobileNav";
 import NavBar from "./NavBar";
+import Wordmark from "./Wordmark";
 
 // Server component — only NavBar (scroll colour) and MobileNav (menu
 // toggle) below need client-side state.
@@ -44,7 +45,7 @@ export default function Header() {
             className="h-[29px] w-[29px] shrink-0 object-contain md:h-[35px] md:w-[35px]"
             preload
           />
-          {BRAND_NAME}
+          <Wordmark />
         </Link>
 
         <nav aria-label="Primary" className="hidden items-center gap-6 md:flex">

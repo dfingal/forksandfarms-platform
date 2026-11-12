@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { BRAND_NAME, LOGO_ICON } from "@/lib/brand";
+import { LOGO_ICON } from "@/lib/brand";
 import { NAV_LINKS, INSTAGRAM_URL, CONTACT_EMAIL } from "@/lib/nav-links";
+import Wordmark from "./Wordmark";
 
 export default function Footer() {
   return (
@@ -10,7 +11,7 @@ export default function Footer() {
         <span className="flex items-center gap-2 font-semibold tracking-tight">
           {/* Decorative: the name right next to it says the same thing. */}
           <Image src={LOGO_ICON} alt="" sizes="32px" className="h-8 w-8 shrink-0 object-contain" />
-          {BRAND_NAME}
+          <Wordmark />
         </span>
 
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
