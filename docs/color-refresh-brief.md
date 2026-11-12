@@ -26,9 +26,21 @@ introducing near-duplicate greens.
 \#A9BA9D on the body, app shell, and normal section backgrounds. Avoid
 stray cream strips or gaps.
 
-**Navbar and footer:** Use Laurel Green for the navbar and default
-footer background; retain the existing logo, green wordmark, links, and
-icon styling. Keep subtle separators where needed.
+**Navbar (updated 2026-11-12):** The navbar is a floating, rounded bar
+inset from the top and side edges (smaller margins on mobile).
+- It's sticky, its max width matches the page container, and it sits
+  above the Google Map.
+- At the top of the page it's Warm Off-White \#F7F6F0. After about 20px
+  of scrolling it changes to Nav Scrolled \#DCE3D6 (token `nav-scrolled`)
+  with a subtle shadow. The change is a 200ms transition, or instant
+  under prefers-reduced-motion.
+- The opened mobile menu panel matches the bar's current colour.
+- Keep the existing logo, wordmark, links, icons and hamburger. Laurel
+  shows around the bar.
+
+**Footer:** Use Laurel Green for the default footer background; retain
+the existing logo, green wordmark, links, and icon styling. Keep subtle
+separators where needed.
 
 **Hero:** Keep the existing copy, imagery, spacing, typography, and CTA
 layout. Set the hero surface to Laurel Green; keep headings and primary

@@ -32,16 +32,19 @@ export default function MobileNav() {
       </button>
 
       {open && (
+        // Drops down just below the floating bar (NavBar is the positioned
+        // parent), same width and corners, and matches the bar's current
+        // colour via NavBar's data-scrolled.
         <div
           id="mobile-nav-panel"
-          className="absolute inset-x-0 top-full z-20 flex flex-col gap-1 border-t border-forest/10 bg-background px-4 py-4 shadow-sm"
+          className="absolute inset-x-0 top-full z-20 mt-2 flex flex-col gap-1 rounded-2xl bg-cream px-4 py-4 shadow-md transition-colors duration-200 motion-reduce:transition-none group-data-[scrolled=true]/navbar:bg-nav-scrolled"
         >
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               onClick={() => setOpen(false)}
-              className="rounded px-2 py-2 text-base font-medium text-forest hover:bg-cream"
+              className="rounded px-2 py-2 text-base font-medium text-forest hover:bg-forest/5"
             >
               {link.label}
             </Link>
@@ -51,7 +54,7 @@ export default function MobileNav() {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => setOpen(false)}
-            className="flex items-center gap-2 rounded px-2 py-2 text-base font-medium text-forest hover:bg-cream"
+            className="flex items-center gap-2 rounded px-2 py-2 text-base font-medium text-forest hover:bg-forest/5"
           >
             <InstagramIcon className="h-5 w-5" />
             Instagram

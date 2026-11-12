@@ -26,6 +26,9 @@
   --color-laurel: #b8c7ae; /* page canvas: body, header, footer, sections */
   --color-cream: #f7f6f0; /* warm off-white: cards, button labels */
   --color-sage: #9dc183; /* accent surface: one per page, large text only */
+  /* Floating header bar once scrolled >20px (cream at the top of the page).
+     Forest on it is 6.32:1, terracotta hover/focus ring is 6.71:1. */
+  --color-nav-scrolled: #dce3d6;
   --color-muted: #526b59; /* secondary text, on cream cards only */
   /* Darkened from the placeholder #c1622c (2.34:1 on laurel) so links,
      error messages and the focus ring stay readable.
@@ -40,6 +43,7 @@
   --color-laurel: var(--color-laurel);
   --color-cream: var(--color-cream);
   --color-sage: var(--color-sage);
+  --color-nav-scrolled: var(--color-nav-scrolled);
   --color-muted: var(--color-muted);
   --color-terracotta: var(--color-terracotta);
   --font-sans: var(--font-body);

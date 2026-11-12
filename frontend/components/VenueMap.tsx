@@ -112,8 +112,10 @@ export default function VenueMap({ city, venues }: VenueMapProps) {
       {/* Explicit height, not just min-height: Map below is styled
           height:"100%", which only resolves against an ancestor with a
           definite (not auto/min-only) height. Without this the map's
-          internal container computed to 0x0 and no tiles ever loaded. */}
-      <div className="relative h-80 overflow-hidden rounded-lg border border-forest/10 sm:h-96">
+          internal container computed to 0x0 and no tiles ever loaded.
+          isolate keeps the map's own internal z-indexes inside this box,
+          so they can never paint over the sticky header bar. */}
+      <div className="relative isolate h-80 overflow-hidden rounded-lg border border-forest/10 sm:h-96">
         <Map
           mapId={MAP_ID}
           defaultCenter={{ lat: Number(city.map_center_lat), lng: Number(city.map_center_lng) }}
