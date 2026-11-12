@@ -1,4 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
+import { BRAND_NAME, LOGO_ICON_DETAILED } from "@/lib/brand";
 import { NAV_LINKS, INSTAGRAM_URL } from "@/lib/nav-links";
 import InstagramIcon from "./InstagramIcon";
 import MobileNav from "./MobileNav";
@@ -8,8 +10,28 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-30 border-b border-forest/10 bg-cream">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
-        <Link href="/" className="text-lg font-semibold tracking-tight text-forest">
-          Forks And Farms
+        {/* Logo + name are one link. The image's alt is empty because the
+            visible name already labels the link — otherwise screen readers
+            would read "Forks And Farms" twice. */}
+        <Link
+          href="/"
+          // text-xl (1.25rem) on mobile so name + logo + hamburger fit on
+          // one line at 375px; text-2xl (1.5rem) from md up. nowrap keeps
+          // the name on one line rather than wrapping under the logo.
+          className="flex items-center gap-2 whitespace-nowrap text-xl font-semibold tracking-tight text-forest md:text-2xl"
+        >
+          <Image
+            src={LOGO_ICON_DETAILED}
+            alt=""
+            // 29px on mobile, 35px from md up (where the hamburger gives
+            // way to the full nav). Not on Tailwind's spacing scale, hence
+            // the [..px] values. sizes lets the browser pick a sharp
+            // enough file for 2x/3x screens.
+            sizes="(min-width: 768px) 35px, 29px"
+            className="h-[29px] w-[29px] shrink-0 object-contain md:h-[35px] md:w-[35px]"
+            preload
+          />
+          {BRAND_NAME}
         </Link>
 
         <nav aria-label="Primary" className="hidden items-center gap-6 md:flex">
