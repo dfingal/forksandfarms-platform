@@ -11,8 +11,8 @@ import { BRAND_NAME } from "@/lib/brand";
  * download. If you switch to Figtree for good, set its preload to true
  * too (otherwise it still works, it's just fetched a moment later).
  */
-const redHatDisplay = Red_Hat_Display({ subsets: ["latin"], weight: "400", display: "swap" });
-const figtree = Figtree({ subsets: ["latin"], weight: "400", display: "swap", preload: false });
+const redHatDisplay = Red_Hat_Display({ subsets: ["latin"], weight: ["400", "500"], display: "swap" });
+const figtree = Figtree({ subsets: ["latin"], weight: ["400", "500"], display: "swap", preload: false });
 
 const WORDMARK_FONTS = { redHatDisplay, figtree };
 
@@ -24,7 +24,13 @@ const WORDMARK_FONT = WORDMARK_FONTS["redHatDisplay"];
  * (text-transform), so the text in the page — what screen readers and
  * search engines read — stays "Forks And Farms". Size, colour and
  * letter-spacing come from the parent, so it keeps each spot's look.
+ *
+ * `weight` picks one of the two loaded weights: 400 (footer) or 500
+ * (header).
  */
-export default function Wordmark() {
-  return <span className={`${WORDMARK_FONT.className} font-normal lowercase`}>{BRAND_NAME}</span>;
+export default function Wordmark({ weight = 400 }: { weight?: 400 | 500 }) {
+  const weightClass = weight === 500 ? "font-medium" : "font-normal";
+  return (
+    <span className={`${WORDMARK_FONT.className} ${weightClass} lowercase`}>{BRAND_NAME}</span>
+  );
 }
