@@ -3,7 +3,7 @@
  * tokens). Keep the hex values in sync with app/globals.css.
  */
 
-import logoIcon from "@/public/brand/fnf-logo-icons/logo-icon-144.png";
+import logoIcon from "@/public/brand/fnf-logo-small-icons/logo-icon-small-144.png";
 
 export const BRAND_NAME = "Forks And Farms";
 
@@ -13,8 +13,12 @@ export const BRAND_COLORS = {
 } as const;
 
 /**
- * The round logo mark. The 144px source keeps it sharp on 3× screens at
- * the 36-44px sizes we show it; next/image serves it as WebP to browsers
- * that support it, falling back to this PNG.
+ * The simplified round badge, for every small use (header, footer).
+ * The 144px source keeps it sharp on 3× screens at the 32-44px sizes we
+ * show it; next/image serves it as WebP to browsers that support it,
+ * falling back to this PNG.
+ *
+ * The detailed badge in public/brand/fnf-logo-icons/ is kept for future
+ * large uses only — its fine detail turns to mush at small sizes.
  */
 export const LOGO_ICON = logoIcon;

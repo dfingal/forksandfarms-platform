@@ -245,7 +245,10 @@ Notes:
 
 - Follow the Phase I wireframes in `docs/wireframes/`.
 - Brand palette: forest green, cream, terracotta, defined as Tailwind theme tokens in `frontend/app/globals.css` so they can be swapped in one place. **Forest is final: `#365540`** (the logo's green; 7.37:1 on cream, WCAG AA). Cream and terracotta are still placeholders.
-- Logo: round mark in `frontend/public/brand/fnf-logo-icons/`, shown in the header (36px mobile / 44px desktop) and footer (32px). Browser icons use Next's file conventions (`app/favicon.ico`, `app/icon.png`, `app/apple-icon.png`, which is flattened onto cream because iOS shows transparency as black) plus `app/manifest.ts`.
+- Logo: two versions of the round badge in `frontend/public/brand/`.
+  - `fnf-logo-small-icons/` (simplified) is used for **every small use**: the header (36px mobile / 44px desktop), the footer (32px), the browser icons and the manifest icons.
+  - `fnf-logo-icons/` (detailed) is kept for future large uses only.
+  - Browser icons use Next's file conventions (`app/favicon.ico`, `app/icon.png`, `app/apple-icon.png`, which is flattened onto cream because iOS shows transparency as black) plus `app/manifest.ts`.
 - Mobile-first; test at 375px and 1200px+.
 - Accessible: alt text on all images, keyboard-navigable map cards and form, visible focus states, form labels.
 
