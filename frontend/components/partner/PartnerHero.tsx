@@ -26,7 +26,7 @@ export default function PartnerHero() {
       <div
         role="img"
         aria-label="Plants on display at a Forks And Farms partner venue (placeholder)"
-        className="flex aspect-[4/3] items-center justify-center rounded-lg border border-forest/10 bg-cream text-sm text-muted"
+        className="flex aspect-[4/3] items-center justify-center rounded-lg border border-forest/20 bg-cream text-sm text-muted"
       >
         Photo coming soon
       </div>

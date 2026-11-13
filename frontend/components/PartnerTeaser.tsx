@@ -39,7 +39,7 @@ export default function PartnerTeaser() {
 
         <div className="mt-4 grid gap-4 sm:grid-cols-3">
           {OPTIONS.map((option) => (
-            <div key={option.title} className="rounded-lg border border-forest/10 bg-cream p-4">
+            <div key={option.title} className="rounded-lg border border-forest/20 bg-cream p-4">
               <h3 className="text-forest">{option.title}</h3>
               <p className="mt-1 text-sm text-muted">{option.body}</p>
             </div>

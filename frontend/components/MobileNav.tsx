@@ -34,7 +34,9 @@ export default function MobileNav() {
       {open && (
         // Only exists below md, where the header is the regular full-width
         // one: the panel spans the full width just below it (the sticky
-        // <header> is the positioned parent).
+        // <header> is the positioned parent). Always cream, even while the
+        // header itself is still transparent at the top of the page, so
+        // the links never sit over page content.
         <div
           id="mobile-nav-panel"
           className="absolute inset-x-0 top-full z-20 flex flex-col gap-1 border-t border-forest/10 bg-cream px-4 py-4 shadow-sm"

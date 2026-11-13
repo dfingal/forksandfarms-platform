@@ -3,36 +3,35 @@
 :root {
   /* Fixed brand palette — the site does not follow the OS/browser dark
      mode preference (there is deliberately no prefers-color-scheme
-     override here); it always renders laurel background / forest text. */
-  --background: var(--color-laurel);
+     override here); it always renders light-green background / forest text. */
+  --background: var(--color-light-green);
   --foreground: var(--color-forest);
 
   /*
-   * Brand palette (spec §8; the "Laurel" refresh in
-   * docs/color-refresh-brief.md). Every component references the tokens
-   * below, not raw hex, so a palette change is a one-line edit here —
-   * except lib/brand.ts, which repeats some values for places CSS can't
-   * reach (the web manifest).
+   * Brand palette (spec §8; docs/color-refresh-brief.md). Every
+   * component references the tokens below, not raw hex, so a palette
+   * change is a one-line edit here — except lib/brand.ts, which repeats
+   * some values for places CSS can't reach (the web manifest).
    *
    * Contrast (WCAG AA: 4.5:1 for normal text; 3:1 for large text, i.e.
    * ≥24px, or ≥18.66px bold):
-   * - forest: 5.28 on laurel, 7.67 on cream, 4.11 on sage (large text only)
-   * - muted: 5.38 on cream, 3.71 on laurel (so muted goes on cream cards only)
-   * - terracotta: 5.61 on laurel, 8.12 on cream
-   * Faded forest text (text-forest/70 etc.) fails on laurel, and mostly
-   * on cream too. Use text-forest or text-muted instead.
+   * - forest: 6.99 on light-green, 7.67 on cream, 4.11 on sage (large text only)
+   * - muted: 4.90 on light-green, 5.38 on cream
+   * - terracotta: 7.42 on light-green, 8.14 on cream
+   * Faded forest text (text-forest/70 etc.) mostly fails. Use
+   * text-forest or text-muted instead.
+   *
+   * Cream cards are very close to light-green (1.10:1), so cards rely on
+   * a border-forest/20 outline to stand out.
    */
   --color-forest: #365540; /* logo green: text, headings, buttons */
-  --color-laurel: #c6d2be; /* page canvas: body, footer, sections */
-  --color-cream: #f7f6f0; /* warm off-white: cards, button labels */
+  --color-light-green: #e7eede; /* page canvas: body, footer, sections */
+  --color-cream: #f7f6f0; /* warm off-white: cards, scrolled header, button labels */
   --color-sage: #9dc183; /* accent surface: one per page, large text only */
-  /* Floating header bar (lg+) once scrolled >20px; cream at the top.
-     Forest on it is 6.53:1, terracotta hover/focus ring is 6.93:1. */
-  --color-nav-scrolled: #e0e6db;
-  --color-muted: #526b59; /* secondary text, on cream cards only */
-  /* Darkened from the placeholder #c1622c (which fails AA on laurel) so
-     links, error messages and the focus ring stay readable.
-     TODO(brand): replace with final terracotta. */
+  --color-muted: #526b59; /* secondary text */
+  /* Darkened from the placeholder #c1622c (which failed AA on the earlier
+     darker backgrounds) so links, error messages and the focus ring stay
+     readable. TODO(brand): replace with final terracotta. */
   --color-terracotta: #743b1b;
 }
 
@@ -40,10 +39,9 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-forest: var(--color-forest);
-  --color-laurel: var(--color-laurel);
+  --color-light-green: var(--color-light-green);
   --color-cream: var(--color-cream);
   --color-sage: var(--color-sage);
-  --color-nav-scrolled: var(--color-nav-scrolled);
   --color-muted: var(--color-muted);
   --color-terracotta: var(--color-terracotta);
   --font-sans: var(--font-body);
@@ -60,7 +58,7 @@ html {
   /* Without this, some browsers (Safari in particular) paint their own
      dark canvas behind the page in OS dark mode whenever content is
      shorter than the viewport — showing as a black band below the
-     footer even though body itself is laurel. */
+     footer even though body itself is light green. */
   color-scheme: light;
 }
 

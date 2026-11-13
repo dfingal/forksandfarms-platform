@@ -39,7 +39,7 @@ export default async function PartnerProof() {
       {TESTIMONIALS.length > 0 && (
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
           {TESTIMONIALS.map((t) => (
-            <figure key={t.name} className="rounded-lg border border-forest/10 bg-cream p-4">
+            <figure key={t.name} className="rounded-lg border border-forest/20 bg-cream p-4">
               <blockquote className="text-forest/80">&ldquo;{t.quote}&rdquo;</blockquote>
               <figcaption className="mt-2 text-sm font-medium text-forest">
                 {t.name}, {t.venue}

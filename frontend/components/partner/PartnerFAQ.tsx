@@ -33,7 +33,7 @@ export default function PartnerFAQ() {
   return (
     <section className="mx-auto max-w-6xl px-4 py-7 sm:px-6">
       <h2 className="text-forest">Frequently asked questions</h2>
-      <div className="mt-4 divide-y divide-forest/10 rounded-lg border border-forest/10 bg-cream">
+      <div className="mt-4 divide-y divide-forest/20 rounded-lg border border-forest/20 bg-cream">
         {FAQS.map((faq) => (
           <details key={faq.question} className="group p-4 open:pb-4">
             <summary className="flex cursor-pointer list-none items-center justify-between gap-3 font-medium text-forest marker:content-none">

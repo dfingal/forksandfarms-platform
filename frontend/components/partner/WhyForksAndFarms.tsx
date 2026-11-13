@@ -6,7 +6,7 @@ export default function WhyForksAndFarms() {
       <div
         role="img"
         aria-label="Forks And Farms at work (placeholder)"
-        className="order-last flex aspect-[4/3] items-center justify-center rounded-lg border border-forest/10 bg-cream text-sm text-muted lg:order-first"
+        className="order-last flex aspect-[4/3] items-center justify-center rounded-lg border border-forest/20 bg-cream text-sm text-muted lg:order-first"
       >
         Photo coming soon
       </div>
