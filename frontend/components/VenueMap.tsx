@@ -69,7 +69,7 @@ function MapPlaceholder({ city, venues }: VenueMapProps) {
   // No API key, no load, or a runtime script error: a styled fallback
   // instead of a broken/blank map (never crash the page over this).
   return (
-    <div className="flex h-80 flex-col items-center justify-center gap-3 rounded-lg border border-forest/10 p-6 text-center sm:h-96">
+    <div className="flex h-80 flex-col items-center justify-center gap-3 rounded-lg border border-forest/20 p-6 text-center sm:h-96">
       <p className="text-sm text-forest">
         Map unavailable right now — here are our {city.name} locations:
       </p>
@@ -115,7 +115,7 @@ export default function VenueMap({ city, venues }: VenueMapProps) {
           internal container computed to 0x0 and no tiles ever loaded.
           isolate keeps the map's own internal z-indexes inside this box,
           so they can never paint over the sticky header bar. */}
-      <div className="relative isolate h-80 overflow-hidden rounded-lg border border-forest/10 sm:h-96">
+      <div className="relative isolate h-80 overflow-hidden rounded-lg border border-forest/20 sm:h-96">
         <Map
           mapId={MAP_ID}
           defaultCenter={{ lat: Number(city.map_center_lat), lng: Number(city.map_center_lng) }}
@@ -165,7 +165,7 @@ export default function VenueMap({ city, venues }: VenueMapProps) {
         </Map>
 
         {selected && (
-          <div className="absolute bottom-3 left-3 right-3 flex gap-3 rounded-lg border border-forest/10 bg-cream p-3 shadow-md sm:max-w-xs">
+          <div className="absolute bottom-3 left-3 right-3 flex gap-3 rounded-lg border border-forest/20 bg-cream p-3 shadow-md sm:max-w-xs">
             <div
               aria-hidden="true"
               className="h-14 w-14 shrink-0 rounded bg-forest/10"

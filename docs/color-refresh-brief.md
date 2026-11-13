@@ -24,29 +24,29 @@ introducing near-duplicate greens.
 
 **Global canvas:** Replace the existing cream page background with
 \#A9BA9D on the body, app shell, and normal section backgrounds. Avoid
-stray cream strips or gaps.
+stray cream strips or gaps. *(Superseded: the page background is now
+Light Green \#E7EEDE; see the light-green update below.)*
 
-**Navbar (updated 2026-11-12):** The header is sticky and sits above
-the Google Map. It keeps the existing logo, wordmark, links, icons and
-hamburger, and has two looks:
-- **lg (1024px) and up:** a floating, rounded bar inset from the top
-  and sides.
-  - Max width 1440px, centred, with 24px side margins on narrower
-    screens. It's wider than the page content, which keeps its own
-    width.
-  - At the top of the page it's Warm Off-White \#F7F6F0. After about
-    20px of scrolling it changes to Nav Scrolled \#E0E6DB (token
-    `nav-scrolled`) with a subtle shadow.
-  - The change is a 200ms transition, or instant under
-    prefers-reduced-motion.
-  - Laurel shows around the bar.
+**Navbar (updated 2026-11-12, light-green update):** The header is
+sticky and sits above the Google Map. It keeps the existing logo,
+wordmark, links, icons and hamburger.
+- **At the top of the page** it's transparent, blending into the
+  background.
+- **After about 20px of scrolling** it turns Warm Off-White \#F7F6F0
+  with a subtle shadow and a faint border.
+- The change is a 200ms transition, or instant under
+  prefers-reduced-motion.
+- **lg (1024px) and up:** a floating, rounded bar inset from the top and
+  sides. Max width 1440px, centred, with 24px side margins on narrower
+  screens. It's wider than the page content, which keeps its own width.
 - **Below 1024px:** a regular full-width sticky header, edge to edge,
   with no rounded corners or side gaps.
-  - Warm Off-White \#F7F6F0 with a subtle bottom border, and no scroll
-    colour change.
-  - The mobile menu panel opens full width below it.
+- The mobile menu panel opens full width below it and is always Warm
+  Off-White, so it's readable even while the header is transparent.
+- The old Nav Scrolled colour (\#E0E6DB, token `nav-scrolled`) has been
+  removed.
 
-**Footer:** Use Laurel Green for the default footer background; retain
+**Footer:** Use the page background (now Light Green \#E7EEDE) for the default footer background; retain
 the existing logo, green wordmark, links, and icon styling. Keep subtle
 separators where needed.
 
@@ -123,4 +123,12 @@ website.
   - Muted Green is 3.71:1 on the background, so it is still for off-white cards only (5.38:1 there).
   - Terracotta `#743b1b` (links, errors, focus ring) is 5.61:1 on the background and 6.93:1 on the scrolled navbar.
   - Off-white labels on the green buttons are 7.67:1, and 6.29:1 on hover.
+- **Light-green update (2026-11-12):** the page background is now Light Green `#E7EEDE` (token `light-green`) everywhere. Re-verified:
+  - **Brand green text:** 6.99:1 on the background, 7.67:1 on cream cards and the scrolled header.
+  - **Muted Green:** 4.90:1 on the background and 5.38:1 on cream. It now passes on both, so it's no longer limited to cards.
+  - **Terracotta `#743b1b`:** links and errors are 7.42:1 on the background and 8.14:1 on cream. The focus ring is at least 4.36:1 against every surface it sits on (3:1 needed).
+  - **Buttons:** off-white labels on the green buttons are 7.67:1, and 6.02:1 on hover. Outline buttons and input borders are 6.99:1 against the background.
+  - **Badges:** status chips are 6.58–7.67:1, and the tier badge is 6.94:1.
+  - **Sage accent:** brand green on Sage is unchanged at 4.11:1, so it's still for large text only (the 24px callout heading).
+  - **Cards:** cream `#F7F6F0` is only 1.10:1 against the new background. Card and panel borders were strengthened from `border-forest/10` to `border-forest/20` so cards still stand out (the border is 1.25:1 against the background and 1.37:1 against the card).
 - Report any other accessibility adjustments in the summary.

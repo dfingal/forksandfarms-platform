@@ -23,7 +23,7 @@ export default function VenueCard({
   return (
     <Link
       href={`/locations/${venue.city}/${venue.slug}`}
-      className="group flex items-center gap-3 rounded-lg border border-forest/10 bg-cream p-3 sm:flex-col sm:items-stretch sm:gap-0 sm:overflow-hidden sm:p-0"
+      className="group flex items-center gap-3 rounded-lg border border-forest/20 bg-cream p-3 sm:flex-col sm:items-stretch sm:gap-0 sm:overflow-hidden sm:p-0"
     >
       <div
         aria-hidden="true"

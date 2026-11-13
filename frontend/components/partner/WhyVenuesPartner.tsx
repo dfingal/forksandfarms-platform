@@ -22,7 +22,7 @@ export default function WhyVenuesPartner() {
       </h2>
       <div className="grid gap-4 sm:grid-cols-3">
         {BENEFITS.map((benefit) => (
-          <div key={benefit.title} className="rounded-lg border border-forest/10 bg-cream p-4">
+          <div key={benefit.title} className="rounded-lg border border-forest/20 bg-cream p-4">
             <h3 className="text-forest">{benefit.title}</h3>
             <p className="mt-2 text-sm text-muted">{benefit.body}</p>
           </div>
