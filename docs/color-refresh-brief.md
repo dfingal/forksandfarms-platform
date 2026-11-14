@@ -14,6 +14,7 @@ for cards. This is a color-only update, not a redesign.
 | Card and content surfaces            | Warm Off-White | \#F7F6F0                       |
 | Accent / featured card               | Sage Green     | \#9DC183                       |
 | Secondary text (on light cards only) | Muted Green    | \#526B59                       |
+| Highlight (large text only)          | Accent Orange  | \#E65300                       |
 | Borders / separators                 | Tonal Green    | Choose accessible subtle shade |
 
 Color values are starting tokens. Preserve the current forest green if
@@ -131,4 +132,8 @@ website.
   - **Badges:** status chips are 6.58–7.67:1, and the tier badge is 6.94:1.
   - **Sage accent:** brand green on Sage is unchanged at 4.11:1, so it's still for large text only (the 24px callout heading).
   - **Cards:** cream `#F7F6F0` is only 1.10:1 against the new background. Card and panel borders were strengthened from `border-forest/10` to `border-forest/20` so cards still stand out (the border is 1.25:1 against the background and 1.37:1 against the card).
+- **Accent Orange (2026-11-14):** `#E65300` (token `accent-orange`) is a slightly deeper `#FF5C00`, which is only 2.61:1 on the background.
+  - **Contrast:** 3.16:1 on the background and 3.46:1 on cream. That passes WCAG AA for **large text only** (≥24px, or ≥18.66px bold).
+  - **Rule:** highlights only, large text only. Never use it for body text, links, small labels, buttons or the focus ring.
+  - **Current use:** only the rotating word in the homepage hero headline (36px bold).
 - Report any other accessibility adjustments in the summary.

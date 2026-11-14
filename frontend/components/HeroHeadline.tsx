@@ -42,7 +42,9 @@ interface WordState {
  * Homepage hero <h1>: "If you like your plants with" + one word below it
  * that rotates every 2.8s with a soft slide-and-fade (.hero-word-in /
  * .hero-word-out in app/globals.css). The word is bold and in the
- * terracotta accent (7.42:1 on the light-green background, WCAG AA).
+ * accent-orange highlight colour: 3.16:1 on the light-green background,
+ * which passes WCAG AA because it's large text (36px bold). Keep it
+ * large if the heading size ever changes.
  *
  * During a change, the outgoing word is rendered once more with the exit
  * animation, then unmounted on animationend (or after a short timeout if
@@ -119,7 +121,7 @@ export default function HeroHeadline() {
           top of each other, left-aligned. */}
       <span
         aria-hidden="true"
-        className="relative block h-10 overflow-hidden font-bold text-terracotta"
+        className="relative block h-10 overflow-hidden font-bold text-accent-orange"
       >
         {leaving !== null && !reducedMotion && (
           <span
