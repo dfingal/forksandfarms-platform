@@ -50,32 +50,43 @@
 
 /* Hero headline word rotation (components/HeroHeadline.tsx): a soft
    vertical slide + fade, no bounce. The new word rises in from below as
-   the old one rises out the top. Defined as theme animations so they're
-   usable as animate-word-in / animate-word-out. */
-@theme {
-  --animate-word-in: word-in 350ms ease-out both;
-  --animate-word-out: word-out 350ms ease-out both;
+   the old one rises out the top; the line itself clips (overflow hidden).
+   350ms — keep in sync with WORD_TRANSITION_MS in HeroHeadline.tsx.
+   Plain CSS classes rather than Tailwind theme animations, so they don't
+   depend on Tailwind emitting theme variables. */
+.hero-word-in {
+  animation: hero-word-in 350ms ease-out both;
+}
 
-  @keyframes word-in {
-    from {
-      opacity: 0;
-      transform: translateY(40%);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+/* The outgoing word's resting style IS its end state (invisible, moved
+   up out of the clipped line), and `forwards` holds it there. So even if
+   the animation never runs (or animationend never fires), the old word
+   can't stay visible; React also removes it right after. */
+.hero-word-out {
+  opacity: 0;
+  transform: translateY(-100%);
+  animation: hero-word-out 350ms ease-out forwards;
+}
+
+@keyframes hero-word-in {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-  @keyframes word-out {
-    from {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    to {
-      opacity: 0;
-      transform: translateY(-40%);
-    }
+@keyframes hero-word-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-100%);
   }
 }
 
