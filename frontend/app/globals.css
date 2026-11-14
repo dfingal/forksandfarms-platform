@@ -48,6 +48,37 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Hero headline word rotation (components/HeroHeadline.tsx): a soft
+   vertical slide + fade, no bounce. The new word rises in from below as
+   the old one rises out the top. Defined as theme animations so they're
+   usable as animate-word-in / animate-word-out. */
+@theme {
+  --animate-word-in: word-in 350ms ease-out both;
+  --animate-word-out: word-out 350ms ease-out both;
+
+  @keyframes word-in {
+    from {
+      opacity: 0;
+      transform: translateY(40%);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes word-out {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-40%);
+    }
+  }
+}
+
 html,
 body {
   background: var(--background);

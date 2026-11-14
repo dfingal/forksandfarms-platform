@@ -1,4 +1,5 @@
 import Link from "next/link";
+import HeroHeadline from "./HeroHeadline";
 
 // Hero section (spec §3.1.1). Hero photo is a styled placeholder box
 // until real photography exists (spec §14 open item).
@@ -6,9 +7,7 @@ export default function Hero() {
   return (
     <section className="mx-auto grid max-w-6xl gap-6 px-4 py-7 sm:px-6 sm:py-11 lg:grid-cols-2 lg:items-center">
       <div>
-        {/* Non-breaking space before the final word so "go." can't end up
-            orphaned alone on its own line at narrow widths. */}
-        <h1 className="text-forest">Plants in the places you already&nbsp;go.</h1>
+        <HeroHeadline />
         {/* TODO(copy): real one-line explanation */}
         <p className="mt-3 max-w-md text-forest">
           We place curated plants in St. Louis coffee shops, wine bars, restaurants, and
