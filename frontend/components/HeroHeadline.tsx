@@ -118,15 +118,17 @@ export default function HeroHeadline() {
         {/* The word slot. Its width is always the widest word's: every
             word is stacked invisibly in the same grid cell, so nothing
             reflows as the word changes. Its height is exactly one headline
-            line: 2.5rem, or 3.125rem from lg up, where the headline is 25%
-            larger (.hero-headline in globals.css). overflow-hidden clips
+            line (h-[1lh]: one line of the h1's own line height, which
+            grows from lg up via .hero-headline in globals.css; the
+            invisible words give the same height in browsers without lh
+            support). overflow-hidden clips
             the slide, and align-top plus the matching line height keeps the
             word on the text's baseline.
             ("Like your cocktails" is 331px of the 343px available at 375px.
             On narrower phones the slot wraps onto its own line, the same
-            for every word, so there's still no shift. From lg up it's
-            ~414px in a text column at least ~476px wide.) */}
-        <span className="relative inline-grid h-10 overflow-hidden align-top font-bold text-accent-orange lg:h-[3.125rem]">
+            for every word, so there's still no shift. From lg up the fit is
+            worked out in globals.css.) */}
+        <span className="relative inline-grid h-[1lh] overflow-hidden align-top font-bold text-accent-orange">
           {WORDS.map((word) => (
             <span key={word} className="invisible col-start-1 row-start-1 whitespace-nowrap">
               {word}

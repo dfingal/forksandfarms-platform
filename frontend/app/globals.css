@@ -64,17 +64,24 @@
   animation: hero-word-in 350ms ease-out both;
 }
 
-/* Homepage hero headline: 25% larger from lg (1024px) up, i.e. 2.25rem
-   → 2.8125rem (45px), with the line height scaled to match (2.5rem →
-   3.125rem). A plain CSS rule rather than Tailwind classes because the
-   base h1 rule below is unlayered and would win over a utility. The word
-   slot's height in HeroHeadline.tsx (h-10 lg:h-[3.125rem]) must match
-   this line height. "Like your cocktails" is ~414px at this size; the
-   narrowest two-column text column (at 1024px) is ~476px. */
+/* Homepage hero headline size from lg (1024px) up. Below lg it's the
+   base h1 (2.25rem / 2.5rem line height). From lg it grows smoothly
+   with the viewport, from 2.8125rem (45px) at 1024px to 3.5rem (56px) at
+   1280px (xl), and stays 3.5rem beyond that. The line height is
+   unitless so it scales with it (1.111 = the 2.5rem/2.25rem ratio).
+   Fit of "Like your cocktails" (≈9.19px per px of font size) in the
+   two-column text column, allowing for a 15px scrollbar:
+     1024px: 45px font → 414px line in a 468px column
+     1100px: 48px      → 444px in 506px
+     1280px+: 56px     → 515px in 540px (the column stops growing)
+   The word slot (HeroHeadline.tsx) is h-[1lh], one line of whatever
+   this line height is, so the rotation still never shifts.
+   A plain CSS rule rather than Tailwind classes because the base h1
+   rule below is unlayered and would win over a utility. */
 @media (min-width: 64rem) {
   .hero-headline {
-    font-size: 2.8125rem;
-    line-height: 3.125rem;
+    font-size: clamp(2.8125rem, 0.0625rem + 4.297vw, 3.5rem);
+    line-height: 1.111;
   }
 }
 
