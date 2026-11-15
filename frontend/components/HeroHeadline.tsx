@@ -108,7 +108,7 @@ export default function HeroHeadline() {
 
   return (
     <h1
-      className="text-forest"
+      className="hero-headline text-forest"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
@@ -117,13 +117,16 @@ export default function HeroHeadline() {
         Like your{" "}
         {/* The word slot. Its width is always the widest word's: every
             word is stacked invisibly in the same grid cell, so nothing
-            reflows as the word changes. Its height is one h1 line (2.5rem)
-            and overflow-hidden clips the slide. align-top + the same line
-            height as the text keeps the word on the line's baseline.
-            ("Like your cocktails" is 331px of the 343px available at
-            375px. On narrower phones the slot wraps onto its own line,
-            the same for every word, so still no shift.) */}
-        <span className="relative inline-grid h-10 overflow-hidden align-top font-bold text-accent-orange">
+            reflows as the word changes. Its height is exactly one headline
+            line: 2.5rem, or 3.125rem from lg up, where the headline is 25%
+            larger (.hero-headline in globals.css). overflow-hidden clips
+            the slide, and align-top plus the matching line height keeps the
+            word on the text's baseline.
+            ("Like your cocktails" is 331px of the 343px available at 375px.
+            On narrower phones the slot wraps onto its own line, the same
+            for every word, so there's still no shift. From lg up it's
+            ~414px in a text column at least ~476px wide.) */}
+        <span className="relative inline-grid h-10 overflow-hidden align-top font-bold text-accent-orange lg:h-[3.125rem]">
           {WORDS.map((word) => (
             <span key={word} className="invisible col-start-1 row-start-1 whitespace-nowrap">
               {word}

@@ -8,8 +8,8 @@ export default function Hero() {
     <section className="mx-auto grid max-w-6xl gap-6 px-4 py-7 sm:px-6 sm:py-11 lg:grid-cols-2 lg:items-center">
       <div>
         <HeroHeadline />
-        <p className="mt-3 max-w-md text-forest">
-          Then you&rsquo;re in the right place. We curate plants in St. Louis&rsquo;s best
+        <p className="mt-3 max-w-md text-lg font-semibold text-forest">
+          Then you&rsquo;re in the right place. We curate plants in St. Louis&rsquo; best
           coffee shops, wine bars, restaurants and more. Enjoy what you see. Buy what you see.
         </p>
 

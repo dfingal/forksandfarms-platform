@@ -64,6 +64,20 @@
   animation: hero-word-in 350ms ease-out both;
 }
 
+/* Homepage hero headline: 25% larger from lg (1024px) up, i.e. 2.25rem
+   → 2.8125rem (45px), with the line height scaled to match (2.5rem →
+   3.125rem). A plain CSS rule rather than Tailwind classes because the
+   base h1 rule below is unlayered and would win over a utility. The word
+   slot's height in HeroHeadline.tsx (h-10 lg:h-[3.125rem]) must match
+   this line height. "Like your cocktails" is ~414px at this size; the
+   narrowest two-column text column (at 1024px) is ~476px. */
+@media (min-width: 64rem) {
+  .hero-headline {
+    font-size: 2.8125rem;
+    line-height: 3.125rem;
+  }
+}
+
 /* The outgoing word's resting style IS its end state (invisible, moved
    up out of the clipped line), and `forwards` holds it there. So even if
    the animation never runs (or animationend never fires), the old word
