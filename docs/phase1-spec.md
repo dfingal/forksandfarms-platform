@@ -71,7 +71,7 @@ Global footer: logo, contact email, Instagram, Locations, Partner With Us.
 Only venues with status `active`, `seasonal`, or `coming_soon` appear publicly. `paused` venues are hidden everywhere.
 
 ### 3.1 Home (`/`)
-1. **Hero** — headline on two lines, "Like your [word]" / "with plants?". The bold accent-orange word at the end of line 1 rotates every 2.8s: coffee / wine / brunch / mimosas / cocktails. Screen readers get the full sentence. Below it, the subheading ("Then you’re in the right place. …"), hero photo. Buttons: "Find Plants Near You" (scrolls to map) and "Partner With Us" (→ `/partner`).
+1. **Hero** — headline on two lines, "Like your [word]" / "with plants?". The bold accent-orange word at the end of line 1 rotates every 2.8s: coffee / wine / brunch / mimosas / cocktails. Screen readers get the full sentence. Below it, the subheading ("Then you’re in the right place. …"), hero photo from Site settings (§4.3b; placeholder box until set). Buttons: "Find Plants Near You" (scrolls to map) and "Partner With Us" (→ `/partner`).
 2. **What We Do** — three blocks: plants in places you already love · buy what you see · we handle the care.
 3. **Map section** ("Find plants near you") — large Google Map centered on the city, custom branded pin for every public venue. Clicking a pin opens a small card: photo, venue name, neighborhood, "View location →".
 4. **Venue cards** (layout 1a) — below the map, up to **4** venue cards (photo, name, neighborhood, "View →"). If more than 4 venues exist, show a **"See all St. Louis locations →"** button linking to `/locations/st-louis`. Ordering: `display_order`, then name.
@@ -96,8 +96,8 @@ Mobile: map on top, cards stacked in a single column; tapping a pin shows the ca
 - Unknown or paused venue → 404.
 
 ### 3.4 Partner page (`/partner`)
-1. **Hero** — headline ("Plants that pay their way."), one-line pitch, photo placeholder (plants in a venue). Button "Start the conversation" scrolls to the application form.
-2. **Why Forks And Farms** — short mission/story block (2–3 sentences, `TODO(copy)`) with a photo placeholder.
+1. **Hero** — headline ("Plants that pay their way."), one-line pitch, photo from Site settings (§4.3b; placeholder box until set). Button "Start the conversation" scrolls to the application form.
+2. **Why Forks And Farms** — short mission/story block (2–3 sentences, `TODO(copy)`) with a photo from Site settings (§4.3b; placeholder box until set).
 3. **Why venues partner** — three benefits: revenue from your décor (earn on every plant sold) · zero plant care (we handle watering, rotation, replacements) · a space people want to stay in (customers come to be around the plants).
 4. **Proof** — active partner venues only, as photo cards pulled from the API, each linking to its venue page; a testimonial block (quote, name, venue — placeholder content, the whole block hidden if empty); an optional stat line (`TODO(copy)`).
 5. **Partnership options** — Retail Shelf, Design & Install, Lease + Maintenance; each with a 1–2 line description and a "Best for…" line (`TODO(copy)`); Lease card keeps the "Starts at 20 plants" tag. No pricing or revenue-share percentages shown.
@@ -158,6 +158,21 @@ All models get `created_at` and `updated_at` timestamps.
 | alt_text | char(200) | Required for accessibility |
 | order | int, default 0 | |
 
+### 4.3b SiteSettings (one record only)
+Site-wide images the owner sets in the admin under "Site settings". There is only ever one record (always id 1): the admin opens it directly, with no list page, no "Add" once it exists, and no delete.
+
+| Field | Type | Notes |
+|---|---|---|
+| home_hero_image | Cloudinary image, optional | Home page hero (§3.1.1) |
+| home_hero_alt | char(200) | Required if the image is set |
+| partner_hero_image | Cloudinary image, optional | Partner page hero (§3.4.1) |
+| partner_hero_alt | char(200) | Required if the image is set |
+| why_image | Cloudinary image, optional | Partner page "Why Forks And Farms" (§3.4.2) |
+| why_alt | char(200) | Required if the image is set |
+
+- Help text on each image: "Landscape 4:3, about 2000 × 1500 px, JPG under 500 KB."
+- An empty image means the page shows its placeholder box.
+
 ### 4.3a SEO fields (City and Venue)
 Added via the reusable abstract `SEOFieldsMixin` (`backend/core/seo.py`). Neighborhood/Tag can reuse it later. All fields are optional; blank means "use the automatic value". See `docs/seo-plan.md`.
 
@@ -205,6 +220,7 @@ Base path: `/api/v1/`. JSON only. Public read endpoints are unauthenticated; onl
 | GET | `/cities/{city_slug}/` | One city + its public venues (card fields) + `seo` |
 | GET | `/venues/?city={slug}` | Public venues, card fields (id, name, slug, city slug, neighborhood, status, short_description, hero_image URL, lat/lng) |
 | GET | `/cities/{city_slug}/venues/{venue_slug}/` | Full venue detail incl. photos, hours, address, website, setup_description, `seo` |
+| GET | `/site-settings/` | Site images (§4.3b): `{home_hero, partner_hero, why_image}`, each `{url, alt}` (absolute URL) or `null` if unset. All `null` if the record doesn't exist yet |
 | POST | `/partner-applications/` | Validates, verifies Turnstile token, saves, sends emails. Returns `201 {id, contact_name}` |
 
 Notes:
@@ -233,8 +249,8 @@ Notes:
 - **Turnstile**: frontend renders widget; backend verifies token before saving.
 - **Page freshness**: Next.js pages are statically generated and revalidated. When a City or Venue is saved in admin, Django calls a protected Next.js revalidate endpoint so changes appear within seconds (fallback: time-based revalidation every 10 minutes).
   - **Endpoint**: `POST /api/revalidate` (`frontend/app/api/revalidate/route.ts`), secret in the `X-Revalidate-Secret` header (`REVALIDATE_SECRET`, same value on both sides), body `{"paths": [...]}`. Only `/`, `/partner`, `/locations/{city}` and `/locations/{city}/{venue}` are accepted (max 100 per request); one bad path rejects the request.
-  - **Trigger** (`backend/core/revalidation.py`, `core/signals.py`): save/delete of City, Venue, VenuePhoto or OpeningHours. Paths are batched per transaction (one request per admin save), sent after commit in a background thread with a 3s timeout; failures are logged and never block the save. Skipped silently if `FRONTEND_REVALIDATE_URL` or `REVALIDATE_SECRET` is unset.
-  - **Pages refreshed**: `/`, `/partner`, the city page, and every venue page in the city (venue pages show other venues under "Other locations"). Slug or city changes also refresh the old URLs so they 404 promptly.
+  - **Trigger** (`backend/core/revalidation.py`, `core/signals.py`): save/delete of City, Venue, VenuePhoto, OpeningHours or SiteSettings. Paths are batched per transaction (one request per admin save), sent after commit in a background thread with a 3s timeout; failures are logged and never block the save. Skipped silently if `FRONTEND_REVALIDATE_URL` or `REVALIDATE_SECRET` is unset.
+  - **Pages refreshed**: `/`, `/partner`, the city page, and every venue page in the city (venue pages show other venues under "Other locations"). Slug or city changes also refresh the old URLs so they 404 promptly. SiteSettings refreshes only `/` and `/partner`.
   - **Manual**: admin action "Refresh live site pages" on Cities and Venues (waits for the result and reports success/failure).
 - **Map pins**: custom SVG pin in brand colors; pins only for public venues.
 - **Google Maps key**: restricted to production + preview domains; daily quota cap set in Google Cloud.
