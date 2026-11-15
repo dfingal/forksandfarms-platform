@@ -8,8 +8,9 @@ Model signals for the core app.
    treatment via the 0003 data migration instead, since signals don't
    fire retroactively.
 
-2. Live-site refresh: saving or deleting a City, Venue, VenuePhoto or
-   OpeningHours row asks the Next.js site to rebuild the affected pages
+2. Live-site refresh: saving or deleting a City, Venue, VenuePhoto,
+   OpeningHours or SiteSettings row asks the Next.js site to rebuild the
+   affected pages
    (see core/revalidation.py for batching/sending). If a venue's slug or
    city changes — or a city's slug — the OLD paths are refreshed too, so
    the old URL stops serving stale content and 404s promptly.
@@ -22,7 +23,7 @@ from django.db.models.signals import post_delete, post_save, pre_save
 from django.dispatch import receiver
 
 from . import revalidation
-from .models import City, OpeningHours, Venue, VenuePhoto
+from .models import City, OpeningHours, SiteSettings, Venue, VenuePhoto
 
 logger = logging.getLogger(__name__)
 
@@ -118,3 +119,12 @@ def refresh_pages_for_venue_child(sender, instance, **kwargs):
     batch as the venue itself — so asking for the venue's full path set
     costs nothing extra (it's merged into one request)."""
     revalidation.request_revalidation(revalidation.paths_for_venue(instance.venue))
+
+
+@receiver(post_save, sender=SiteSettings)
+@receiver(post_delete, sender=SiteSettings)
+@never_breaks_save
+def refresh_pages_for_site_settings(sender, instance, **kwargs):
+    """The site images appear on the home page (hero) and the partner
+    page (hero + "Why Forks And Farms")."""
+    revalidation.request_revalidation(set(revalidation.SITE_WIDE_PATHS))

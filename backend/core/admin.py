@@ -3,11 +3,13 @@ from urllib.parse import urlsplit
 from django.conf import settings
 from django.contrib import admin, messages
 from django.db import transaction
+from django.shortcuts import redirect
+from django.urls import reverse
 from django.utils.html import format_html
 
 from . import revalidation
 from .admin_forms import CoordinatePasteFormMixin, RoundedDecimalField
-from .models import City, OpeningHours, Venue, VenuePhoto
+from .models import City, OpeningHours, SiteSettings, Venue, VenuePhoto
 from .seo import DESCRIPTION_SOFT_LIMIT, TITLE_SOFT_LIMIT, truncate_at_word
 
 
@@ -266,3 +268,64 @@ class VenueAdmin(SEOAdminMixin, admin.ModelAdmin):
         return format_html(
             '<a href="{}" target="_blank" rel="noopener noreferrer">View on Google Maps →</a>', url
         )
+
+
+def _image_preview(image):
+    """Small thumbnail of an uploaded image, for the admin form."""
+    if not image:
+        return "No image yet: the site shows its placeholder box."
+    return format_html(
+        '<img src="{}" alt="" style="max-width: 240px; max-height: 180px; border-radius: 6px;">',
+        image.url,
+    )
+
+
+@admin.register(SiteSettings)
+class SiteSettingsAdmin(admin.ModelAdmin):
+    """
+    One record only. The "Site settings" link in the admin goes straight
+    to it (no list page); there's no "Add" once it exists and no delete.
+    Saving refreshes the home and partner pages (core/signals.py).
+    """
+
+    readonly_fields = ("home_hero_preview", "partner_hero_preview", "why_preview")
+    fieldsets = (
+        (
+            "Home page hero",
+            {"fields": ("home_hero_image", "home_hero_preview", "home_hero_alt")},
+        ),
+        (
+            "Partner page hero",
+            {"fields": ("partner_hero_image", "partner_hero_preview", "partner_hero_alt")},
+        ),
+        (
+            "Partner page: “Why Forks And Farms”",
+            {"fields": ("why_image", "why_preview", "why_alt")},
+        ),
+    )
+
+    @admin.display(description="Current image")
+    def home_hero_preview(self, obj):
+        return _image_preview(obj.home_hero_image)
+
+    @admin.display(description="Current image")
+    def partner_hero_preview(self, obj):
+        return _image_preview(obj.partner_hero_image)
+
+    @admin.display(description="Current image")
+    def why_preview(self, obj):
+        return _image_preview(obj.why_image)
+
+    def has_add_permission(self, request):
+        return super().has_add_permission(request) and not SiteSettings.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def changelist_view(self, request, extra_context=None):
+        # Skip the one-row list: open the record (or the form to create it).
+        if SiteSettings.objects.exists():
+            return redirect(
+                reverse("admin:core_sitesettings_change", args=[SiteSettings.SINGLETON_PK])
+            )
+        return redirect(reverse("admin:core_sitesettings_add"))

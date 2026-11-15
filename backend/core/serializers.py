@@ -8,7 +8,7 @@ by accident when a field is later added to the model.
 
 from rest_framework import serializers
 
-from .models import City, OpeningHours, Venue, VenuePhoto
+from .models import City, OpeningHours, SiteSettings, Venue, VenuePhoto
 from .seo import seo_payload
 
 
@@ -159,3 +159,35 @@ class VenueDetailSerializer(serializers.ModelSerializer):
             )
             result.append({"day": label, "is_closed": is_closed, "ranges": ranges})
         return result
+
+
+class SiteSettingsSerializer(serializers.Serializer):
+    """
+    Public site images: {"home_hero": {"url", "alt"} | null,
+    "partner_hero": …, "why_image": …}. An entry is null when that image
+    isn't set, and the frontend then shows its placeholder.
+    """
+
+    # API key -> (image field, alt field) on SiteSettings.
+    IMAGES = {
+        "home_hero": ("home_hero_image", "home_hero_alt"),
+        "partner_hero": ("partner_hero_image", "partner_hero_alt"),
+        "why_image": ("why_image", "why_alt"),
+    }
+
+    def to_representation(self, instance):
+        request = self.context.get("request")
+        data = {}
+        for key, (image_field, alt_field) in self.IMAGES.items():
+            image = getattr(instance, image_field)
+            if not image:
+                data[key] = None
+                continue
+            # Cloudinary URLs are already absolute; local dev URLs
+            # (/media/...) are made absolute like the venue photos are.
+            url = image.url
+            data[key] = {
+                "url": request.build_absolute_uri(url) if request else url,
+                "alt": getattr(instance, alt_field),
+            }
+        return data
