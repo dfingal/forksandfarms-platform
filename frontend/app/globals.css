@@ -33,6 +33,11 @@
      darker backgrounds) so links, error messages and the focus ring stay
      readable. TODO(brand): replace with final terracotta. */
   --color-terracotta: #743b1b;
+  /* Highlight accent: a slightly deeper #FF5C00 (which is only 2.61:1).
+     3.16:1 on light-green, 3.46:1 on cream: passes AA for LARGE text
+     only (≥24px, or ≥18.66px bold). Use for highlights only, never for
+     body text, links or small labels. Currently: the rotating hero word. */
+  --color-accent-orange: #e65300;
 }
 
 @theme inline {
@@ -44,8 +49,72 @@
   --color-sage: var(--color-sage);
   --color-muted: var(--color-muted);
   --color-terracotta: var(--color-terracotta);
+  --color-accent-orange: var(--color-accent-orange);
   --font-sans: var(--font-body);
   --font-mono: var(--font-geist-mono);
+}
+
+/* Hero headline word rotation (components/HeroHeadline.tsx): a soft
+   vertical slide + fade, no bounce. The new word rises in from below as
+   the old one rises out the top; the line itself clips (overflow hidden).
+   350ms — keep in sync with WORD_TRANSITION_MS in HeroHeadline.tsx.
+   Plain CSS classes rather than Tailwind theme animations, so they don't
+   depend on Tailwind emitting theme variables. */
+.hero-word-in {
+  animation: hero-word-in 350ms ease-out both;
+}
+
+/* Homepage hero headline size from lg (1024px) up. Below lg it's the
+   base h1 (2.25rem / 2.5rem line height). From lg it grows smoothly
+   with the viewport, from 2.8125rem (45px) at 1024px to 3.5rem (56px) at
+   1280px (xl), and stays 3.5rem beyond that. The line height is
+   unitless so it scales with it (1.111 = the 2.5rem/2.25rem ratio).
+   Fit of "Like your cocktails" (≈9.19px per px of font size) in the
+   two-column text column, allowing for a 15px scrollbar:
+     1024px: 45px font → 414px line in a 468px column
+     1100px: 48px      → 444px in 506px
+     1280px+: 56px     → 515px in 540px (the column stops growing)
+   The word slot (HeroHeadline.tsx) is h-[1lh], one line of whatever
+   this line height is, so the rotation still never shifts.
+   A plain CSS rule rather than Tailwind classes because the base h1
+   rule below is unlayered and would win over a utility. */
+@media (min-width: 64rem) {
+  .hero-headline {
+    font-size: clamp(2.8125rem, 0.0625rem + 4.297vw, 3.5rem);
+    line-height: 1.111;
+  }
+}
+
+/* The outgoing word's resting style IS its end state (invisible, moved
+   up out of the clipped line), and `forwards` holds it there. So even if
+   the animation never runs (or animationend never fires), the old word
+   can't stay visible; React also removes it right after. */
+.hero-word-out {
+  opacity: 0;
+  transform: translateY(-100%);
+  animation: hero-word-out 350ms ease-out forwards;
+}
+
+@keyframes hero-word-in {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-word-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
 }
 
 html,
