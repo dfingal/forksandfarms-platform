@@ -1,7 +1,11 @@
-// Partner page hero (spec §3.4.1). "Start the conversation" scrolls to
+import SitePhoto from "@/components/SitePhoto";
+import type { SiteImage } from "@/lib/siteSettings";
+
+// Partner page hero (spec §3.4.1). The photo comes from the admin's
+// Site settings; until one is uploaded it's a placeholder box. "Start the conversation" scrolls to
 // the application form (id="apply" on the form section, scroll-mt-24 to
 // clear the sticky header — same pattern as the home page's #map).
-export default function PartnerHero() {
+export default function PartnerHero({ image = null }: { image?: SiteImage | null }) {
   return (
     <section className="mx-auto grid max-w-6xl gap-6 px-4 py-7 sm:px-6 sm:py-11 lg:grid-cols-2 lg:items-center">
       <div>
@@ -22,14 +26,13 @@ export default function PartnerHero() {
         </div>
       </div>
 
-      {/* Photo placeholder — TODO(assets): real photo of plants in a venue */}
-      <div
-        role="img"
-        aria-label="Plants on display at a Forks And Farms partner venue (placeholder)"
-        className="flex aspect-[4/3] items-center justify-center rounded-lg border border-forest/20 bg-cream text-sm text-muted"
-      >
-        Photo coming soon
-      </div>
+      {/* Preloaded: it's the first big image on the partner page. */}
+      <SitePhoto
+        image={image}
+        placeholderLabel="Plants on display at a Forks And Farms partner venue (placeholder)"
+        placeholderText="Photo coming soon"
+        preload
+      />
     </section>
   );
 }

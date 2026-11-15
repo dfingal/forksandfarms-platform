@@ -1,4 +1,4 @@
-import { getCity } from "@/lib/api";
+import { getCity, getSiteImages } from "@/lib/api";
 import Hero from "@/components/Hero";
 import WhatWeDo from "@/components/WhatWeDo";
 import MapSection from "@/components/MapSection";
@@ -10,11 +10,12 @@ import PartnerTeaser from "@/components/PartnerTeaser";
 const CITY_SLUG = "st-louis";
 
 export default async function Home() {
-  const city = await getCity(CITY_SLUG);
+  // Fetched in parallel; site images fall back to placeholders on failure.
+  const [city, siteImages] = await Promise.all([getCity(CITY_SLUG), getSiteImages()]);
 
   return (
     <div>
-      <Hero />
+      <Hero image={siteImages.homeHero} />
       <WhatWeDo />
 
       {city === null ? (

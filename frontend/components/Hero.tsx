@@ -1,9 +1,11 @@
 import Link from "next/link";
 import HeroHeadline from "./HeroHeadline";
+import SitePhoto from "./SitePhoto";
+import type { SiteImage } from "@/lib/siteSettings";
 
-// Hero section (spec §3.1.1). Hero photo is a styled placeholder box
-// until real photography exists (spec §14 open item).
-export default function Hero() {
+// Hero section (spec §3.1.1). The photo comes from the admin's Site
+// settings; until one is uploaded it's a styled placeholder box.
+export default function Hero({ image = null }: { image?: SiteImage | null }) {
   return (
     <section className="mx-auto grid max-w-6xl gap-6 px-4 py-7 sm:px-6 sm:py-11 lg:grid-cols-2 lg:items-center">
       <div>
@@ -30,14 +32,13 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Hero photo placeholder — TODO(assets): real hero photography */}
-      <div
-        role="img"
-        aria-label="Plants on display at a Forks And Farms partner venue (placeholder)"
-        className="flex aspect-[4/3] items-center justify-center rounded-lg border border-forest/20 bg-cream text-sm text-muted"
-      >
-        Hero photo coming soon
-      </div>
+      {/* Preloaded: it's the first big image on the home page. */}
+      <SitePhoto
+        image={image}
+        placeholderLabel="Plants on display at a Forks And Farms partner venue (placeholder)"
+        placeholderText="Hero photo coming soon"
+        preload
+      />
     </section>
   );
 }

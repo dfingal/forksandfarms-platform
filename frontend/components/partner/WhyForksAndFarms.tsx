@@ -1,15 +1,18 @@
-// "Why Forks And Farms" mission/story block (spec §3.4.2).
-export default function WhyForksAndFarms() {
+import SitePhoto from "@/components/SitePhoto";
+import type { SiteImage } from "@/lib/siteSettings";
+
+// "Why Forks And Farms" mission/story block (spec §3.4.2). The photo
+// comes from the admin's Site settings; until one is uploaded it's a
+// placeholder box.
+export default function WhyForksAndFarms({ image = null }: { image?: SiteImage | null }) {
   return (
     <section className="mx-auto grid max-w-6xl gap-6 px-4 py-7 sm:px-6 lg:grid-cols-2 lg:items-center">
-      {/* Photo placeholder — TODO(assets) */}
-      <div
-        role="img"
-        aria-label="Forks And Farms at work (placeholder)"
-        className="order-last flex aspect-[4/3] items-center justify-center rounded-lg border border-forest/20 bg-cream text-sm text-muted lg:order-first"
-      >
-        Photo coming soon
-      </div>
+      <SitePhoto
+        image={image}
+        placeholderLabel="Forks And Farms at work (placeholder)"
+        placeholderText="Photo coming soon"
+        className="order-last lg:order-first"
+      />
 
       <div>
         <h2 className="text-forest">Why Forks And Farms</h2>
