@@ -4,7 +4,7 @@ import { useEffect, useState, useSyncExternalStore } from "react";
 
 // The rotating words, in order (loops back to the first). The first one
 // is what the server renders, so the initial HTML is stable.
-const WORDS = ["coffee.", "wine.", "brunch.", "mimosas.", "pastries."] as const;
+const WORDS = ["coffee", "wine", "brunch", "mimosas", "cocktails"] as const;
 const ROTATE_EVERY_MS = 2800;
 // Length of the slide-and-fade (.hero-word-in/-out in app/globals.css).
 const WORD_TRANSITION_MS = 350;
@@ -14,7 +14,7 @@ const EXIT_FALLBACK_MS = WORD_TRANSITION_MS + 150;
 
 // What screen readers and search engines get instead of the animation.
 // TODO(copy): keep in sync with WORDS.
-const FULL_SENTENCE = "If you like your plants with coffee, wine, brunch, mimosas or pastries.";
+const FULL_SENTENCE = "Like your coffee, wine, brunch, mimosas or cocktails with plants?";
 
 // Browser-only external sources, read via useSyncExternalStore (same
 // pattern as NavBar.tsx). The server snapshots assume "motion allowed,
@@ -39,8 +39,8 @@ interface WordState {
 }
 
 /**
- * Homepage hero <h1>: "If you like your plants with" + one word below it
- * that rotates every 2.8s with a soft slide-and-fade (.hero-word-in /
+ * Homepage hero <h1>, two lines: "Like your [word]" / "with plants?",
+ * where the word at the end of line 1 rotates every 2.8s with a soft slide-and-fade (.hero-word-in /
  * .hero-word-out in app/globals.css). The word is bold and in the
  * accent-orange highlight colour: 3.16:1 on the light-green background,
  * which passes WCAG AA because it's large text (36px bold). Keep it
@@ -55,7 +55,7 @@ interface WordState {
  * is an aria-live region, so screen readers don't hear each change.
  *
  * Rotation stops entirely for visitors who prefer reduced motion
- * ("coffee." stays), and pauses while the headline is hovered or the tab
+ * ("coffee" stays), and pauses while the headline is hovered or the tab
  * is in the background.
  */
 export default function HeroHeadline() {
@@ -114,30 +114,41 @@ export default function HeroHeadline() {
     >
       <span className="sr-only">{FULL_SENTENCE}</span>
       <span aria-hidden="true" className="block">
-        If you like your plants with
-      </span>
-      {/* Fixed height (one h1 line, 2.5rem) so the swap never shifts the
-          layout; overflow-hidden clips the slide. Words are stacked on
-          top of each other, left-aligned. */}
-      <span
-        aria-hidden="true"
-        className="relative block h-10 overflow-hidden font-bold text-accent-orange"
-      >
-        {leaving !== null && !reducedMotion && (
+        Like your{" "}
+        {/* The word slot. Its width is always the widest word's: every
+            word is stacked invisibly in the same grid cell, so nothing
+            reflows as the word changes. Its height is one h1 line (2.5rem)
+            and overflow-hidden clips the slide. align-top + the same line
+            height as the text keeps the word on the line's baseline.
+            ("Like your cocktails" is 331px of the 343px available at
+            375px. On narrower phones the slot wraps onto its own line,
+            the same for every word, so still no shift.) */}
+        <span className="relative inline-grid h-10 overflow-hidden align-top font-bold text-accent-orange">
+          {WORDS.map((word) => (
+            <span key={word} className="invisible col-start-1 row-start-1 whitespace-nowrap">
+              {word}
+            </span>
+          ))}
+          {leaving !== null && !reducedMotion && (
+            <span
+              key={`out-${leaving}`}
+              className="hero-word-out absolute inset-x-0 top-0 whitespace-nowrap"
+              onAnimationEnd={removeLeavingWord}
+            >
+              {WORDS[leaving]}
+            </span>
+          )}
           <span
-            key={`out-${leaving}`}
-            className="hero-word-out absolute inset-x-0 top-0 whitespace-nowrap"
-            onAnimationEnd={removeLeavingWord}
+            key={`in-${shown}`}
+            className={`absolute inset-x-0 top-0 whitespace-nowrap${animate ? " hero-word-in" : ""}`}
           >
-            {WORDS[leaving]}
+            {WORDS[shown]}
           </span>
-        )}
-        <span
-          key={`in-${shown}`}
-          className={`absolute inset-x-0 top-0 whitespace-nowrap${animate ? " hero-word-in" : ""}`}
-        >
-          {WORDS[shown]}
         </span>
+      </span>
+      {/* Its own line, so it never moves as the word above changes. */}
+      <span aria-hidden="true" className="block">
+        with plants?
       </span>
     </h1>
   );

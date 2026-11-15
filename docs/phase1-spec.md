@@ -71,7 +71,7 @@ Global footer: logo, contact email, Instagram, Locations, Partner With Us.
 Only venues with status `active`, `seasonal`, or `coming_soon` appear publicly. `paused` venues are hidden everywhere.
 
 ### 3.1 Home (`/`)
-1. **Hero** — headline ("If you like your plants with" + a bold accent-orange word that rotates every 2.8s: coffee. / wine. / brunch. / mimosas. / pastries.; full sentence for screen readers), one-line explanation, hero photo. Buttons: "Find Plants Near You" (scrolls to map) and "Partner With Us" (→ `/partner`).
+1. **Hero** — headline on two lines, "Like your [word]" / "with plants?". The bold accent-orange word at the end of line 1 rotates every 2.8s: coffee / wine / brunch / mimosas / cocktails. Screen readers get the full sentence. Below it, the subheading ("Then you’re in the right place. …"), hero photo. Buttons: "Find Plants Near You" (scrolls to map) and "Partner With Us" (→ `/partner`).
 2. **What We Do** — three blocks: plants in places you already love · buy what you see · we handle the care.
 3. **Map section** ("Find plants near you") — large Google Map centered on the city, custom branded pin for every public venue. Clicking a pin opens a small card: photo, venue name, neighborhood, "View location →".
 4. **Venue cards** (layout 1a) — below the map, up to **4** venue cards (photo, name, neighborhood, "View →"). If more than 4 venues exist, show a **"See all St. Louis locations →"** button linking to `/locations/st-louis`. Ordering: `display_order`, then name.
