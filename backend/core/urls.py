@@ -6,6 +6,7 @@ urlpatterns = [
     path("cities/", views.CityListView.as_view(), name="city-list"),
     path("cities/<slug:city_slug>/", views.CityDetailView.as_view(), name="city-detail"),
     path("venues/", views.VenueListView.as_view(), name="venue-list"),
+    path("site-settings/", views.SiteSettingsView.as_view(), name="site-settings"),
     path(
         "cities/<slug:city_slug>/venues/<slug:venue_slug>/",
         views.VenueDetailView.as_view(),

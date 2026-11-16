@@ -1,5 +1,5 @@
 """
-Public read-only API views: cities and venues.
+Public read-only API views: cities, venues and site settings.
 
 Every queryset here is restricted to public data — active cities and
 venues in PUBLIC_VENUE_STATUSES — at the queryset level, not just in the
@@ -10,12 +10,15 @@ paused venue or an inactive city.
 from django.http import Http404
 from django_filters import rest_framework as filters
 from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .constants import PUBLIC_VENUE_STATUSES
-from .models import City, Venue
+from .models import City, SiteSettings, Venue
 from .serializers import (
     CityDetailSerializer,
     CitySerializer,
+    SiteSettingsSerializer,
     VenueCardSerializer,
     VenueDetailSerializer,
 )
@@ -68,3 +71,12 @@ class VenueDetailView(RetrieveAPIView):
             )
         except Venue.DoesNotExist:
             raise Http404
+
+
+class SiteSettingsView(APIView):
+    """GET /api/v1/site-settings/: the site-wide images (home hero,
+    partner hero, "Why Forks And Farms"). Public and read-only; returns
+    nulls if the settings record hasn't been created yet."""
+
+    def get(self, request):
+        return Response(SiteSettingsSerializer(SiteSettings.load(), context={"request": request}).data)

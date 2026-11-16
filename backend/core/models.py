@@ -242,3 +242,87 @@ class VenuePhoto(TimestampedModel):
 
     def __str__(self):
         return f"Photo for {self.venue.name} (#{self.order})"
+
+
+SITE_IMAGE_HELP = "Landscape 4:3, about 2000 × 1500 px, JPG under 500 KB."
+
+
+class SiteSettings(TimestampedModel):
+    """
+    Site-wide images the owner can change in the admin (one record only,
+    always pk=1). Use SiteSettings.load() rather than querying directly.
+
+    Each image has an alt text field; the form requires it whenever the
+    image is set. An empty image means the frontend shows its built-in
+    placeholder box instead. Images go to Cloudinary when CLOUDINARY_URL
+    is set, like venue photos.
+    """
+
+    SINGLETON_PK = 1
+
+    home_hero_image = models.ImageField(
+        "home page hero image", upload_to="site/", blank=True, help_text=SITE_IMAGE_HELP
+    )
+    home_hero_alt = models.CharField(
+        "home hero alt text",
+        max_length=200,
+        blank=True,
+        help_text="Describe the photo for screen readers. Required if there's an image.",
+    )
+    partner_hero_image = models.ImageField(
+        "partner page hero image", upload_to="site/", blank=True, help_text=SITE_IMAGE_HELP
+    )
+    partner_hero_alt = models.CharField(
+        "partner hero alt text",
+        max_length=200,
+        blank=True,
+        help_text="Describe the photo for screen readers. Required if there's an image.",
+    )
+    why_image = models.ImageField(
+        "“Why Forks And Farms” image", upload_to="site/", blank=True, help_text=SITE_IMAGE_HELP
+    )
+    why_alt = models.CharField(
+        "“Why Forks And Farms” alt text",
+        max_length=200,
+        blank=True,
+        help_text="Describe the photo for screen readers. Required if there's an image.",
+    )
+
+    # (image field, its alt text field) pairs — used by clean() and the API.
+    IMAGE_FIELDS = (
+        ("home_hero_image", "home_hero_alt"),
+        ("partner_hero_image", "partner_hero_alt"),
+        ("why_image", "why_alt"),
+    )
+
+    class Meta:
+        verbose_name = "site settings"
+        verbose_name_plural = "site settings"
+
+    def __str__(self):
+        return "Site settings"
+
+    def save(self, *args, **kwargs):
+        # Always the same row, so a second record can never exist: saving a
+        # fresh SiteSettings() overwrites the existing one. Keep that row's
+        # created_at, which auto_now_add only fills in on a real insert.
+        self.pk = self.SINGLETON_PK
+        if self.created_at is None:
+            self.created_at = (
+                type(self).objects.filter(pk=self.pk).values_list("created_at", flat=True).first()
+            )
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def load(cls):
+        """The settings record, or an unsaved empty one if it hasn't been
+        created yet (reading never writes to the database)."""
+        return cls.objects.filter(pk=cls.SINGLETON_PK).first() or cls(pk=cls.SINGLETON_PK)
+
+    def clean(self):
+        errors = {}
+        for image_field, alt_field in self.IMAGE_FIELDS:
+            if getattr(self, image_field) and not getattr(self, alt_field).strip():
+                errors[alt_field] = "Add alt text for this image (required for accessibility)."
+        if errors:
+            raise ValidationError(errors)

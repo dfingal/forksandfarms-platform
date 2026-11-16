@@ -19,6 +19,7 @@ import type {
   PartnerApplicationPayload,
   PartnerApplicationResponse,
 } from "./types";
+import { parseSiteImages, type SiteImages } from "./siteSettings";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -72,6 +73,15 @@ export function getVenues(options?: { city?: string }): Promise<VenueCard[] | nu
 
 export function getVenue(citySlug: string, venueSlug: string): Promise<VenueDetail | null> {
   return apiGet<VenueDetail>(`/cities/${citySlug}/venues/${venueSlug}/`);
+}
+
+/**
+ * The admin's site images (home hero, partner hero, "Why Forks And
+ * Farms"). Never null: a missing endpoint, an API error or empty fields
+ * all become "no image", and the pages show their placeholders.
+ */
+export async function getSiteImages(): Promise<SiteImages> {
+  return parseSiteImages(await apiGet<unknown>("/site-settings/"));
 }
 
 export type PartnerApplicationResult =
